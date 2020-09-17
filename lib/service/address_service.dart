@@ -1,13 +1,15 @@
 import 'package:etherwallet/service/configuration_service.dart';
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:etherwallet/utils/hd_key.dart';
-import "package:hex/hex.dart";
-import 'package:web3dart/credentials.dart';
+import 'package:etherwallet/utils/const.dart';
+import 'package:starcoin_wallet/wallet/account.dart';
+import 'package:starcoin_wallet/wallet/helper.dart';
+import 'package:starcoin_wallet/wallet/keypair.dart';
+import 'package:starcoin_wallet/wallet/wallet.dart';
 
 abstract class IAddressService {
   String generateMnemonic();
   String getPrivateKey(String mnemonic);
-  Future<EthereumAddress> getPublicAddress(String privateKey);
+  Future<Account> getPublicAddress(String privateKey);
   Future<bool> setupFromMnemonic(String mnemonic);
   Future<bool> setupFromPrivateKey(String privateKey);
   String entropyToMnemonic(String entropyMnemonic);
@@ -23,34 +25,33 @@ class AddressService implements IAddressService {
   }
 
   String entropyToMnemonic(String entropyMnemonic) {
-    return bip39.entropyToMnemonic(entropyMnemonic);
+    return entropyMnemonic;
+    //return bip39.entropyToMnemonic(entropyMnemonic);
   }
 
   @override
   String getPrivateKey(String mnemonic) {
-    String seed = bip39.mnemonicToSeedHex(mnemonic);
-    KeyData master = HDKey.getMasterKeyFromSeed(seed);
-    final privateKey = HEX.encode(master.key);
-    print("private: $privateKey");
-    return privateKey;
+    Wallet wallet = new Wallet(mnemonic: mnemonic,url: BASEURL, salt: 'STARCOIN');
+    Account account = wallet.generateAccount(0);
+    return Helpers.byteToHex(account.keyPair.getPrivateKey());
   }
 
   @override
-  Future<EthereumAddress> getPublicAddress(String privateKey) async {
-    final private = EthPrivateKey.fromHex(privateKey);
+  Future<Account> getPublicAddress(String privateKey) async {
 
-    final address = await private.extractAddress();
-    print("address: $address");
-    return address;
+    final private = Helpers.hexToBytes(privateKey);
+    final keypair = KeyPair(private);
+    final account = Account(keypair,BASEURL);
+    return account;
   }
 
   @override
   Future<bool> setupFromMnemonic(String mnemonic) async {
-    final cryptMnemonic = bip39.mnemonicToEntropy(mnemonic);
-    final privateKey = this.getPrivateKey(cryptMnemonic);
+    Wallet wallet = new Wallet(mnemonic: mnemonic, url: BASEURL,salt: 'STARCOIN');
+    Account account = wallet.generateAccount(0);
 
-    await _configService.setMnemonic(cryptMnemonic);
-    await _configService.setPrivateKey(privateKey);
+    await _configService.setMnemonic(mnemonic);
+    await _configService.setPrivateKey(Helpers.byteToHex(account.keyPair.getPrivateKey()));
     await _configService.setupDone(true);
     return true;
   }

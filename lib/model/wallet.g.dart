@@ -19,6 +19,11 @@ class _$Wallet extends Wallet {
   final bool loading;
   @override
   final BuiltList<String> errors;
+  @override
+  final Account account;
+  @override
+  final String publicKey;
+
 
   factory _$Wallet([void Function(WalletBuilder) updates]) =>
       (new WalletBuilder()..update(updates)).build();
@@ -29,7 +34,10 @@ class _$Wallet extends Wallet {
       this.tokenBalance,
       this.ethBalance,
       this.loading,
-      this.errors})
+      this.errors,
+      this.account,
+        this.publicKey,
+      })
       : super._() {
     if (tokenBalance == null) {
       throw new BuiltValueNullFieldError('Wallet', 'tokenBalance');
@@ -93,6 +101,10 @@ class WalletBuilder implements Builder<Wallet, WalletBuilder> {
   String get address => _$this._address;
   set address(String address) => _$this._address = address;
 
+  String _publicKey;
+  String get publicKey => _$this._publicKey;
+  set publicKey(String publicKey) => _$this._publicKey = publicKey;
+
   String _privateKey;
   String get privateKey => _$this._privateKey;
   set privateKey(String privateKey) => _$this._privateKey = privateKey;
@@ -109,6 +121,10 @@ class WalletBuilder implements Builder<Wallet, WalletBuilder> {
   bool get loading => _$this._loading;
   set loading(bool loading) => _$this._loading = loading;
 
+  Account _account;
+  Account get account => _$this._account;
+  set account(Account account) => _$this._account = account;
+
   ListBuilder<String> _errors;
   ListBuilder<String> get errors =>
       _$this._errors ??= new ListBuilder<String>();
@@ -124,6 +140,8 @@ class WalletBuilder implements Builder<Wallet, WalletBuilder> {
       _ethBalance = _$v.ethBalance;
       _loading = _$v.loading;
       _errors = _$v.errors?.toBuilder();
+      _account = _$v.account;
+      _publicKey = _$v.publicKey;
       _$v = null;
     }
     return this;
@@ -153,7 +171,9 @@ class WalletBuilder implements Builder<Wallet, WalletBuilder> {
               tokenBalance: tokenBalance,
               ethBalance: ethBalance,
               loading: loading,
-              errors: _errors?.build());
+              account: account,
+              errors: _errors?.build()
+          );
     } catch (_) {
       String _$failedField;
       try {

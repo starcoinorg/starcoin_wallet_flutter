@@ -1,11 +1,15 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
+import 'package:starcoin_wallet/wallet/account.dart';
 
 part 'wallet.g.dart';
 
 abstract class Wallet implements Built<Wallet, WalletBuilder> {
   @nullable
   String get address;
+
+  @nullable
+  String get publicKey;
 
   @nullable
   String get privateKey;
@@ -15,6 +19,9 @@ abstract class Wallet implements Built<Wallet, WalletBuilder> {
   BigInt get ethBalance;
 
   bool get loading;
+
+  @nullable
+  Account get account;
 
   @nullable
   BuiltList<String> get errors;

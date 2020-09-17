@@ -4,6 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'components/dialog/alert.dart';
 import 'components/menu/main_menu.dart';
 import 'context/wallet/wallet_provider.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:developer';
 
 class WalletMainPage extends HookWidget {
   WalletMainPage(this.title);
@@ -14,6 +16,7 @@ class WalletMainPage extends HookWidget {
   Widget build(BuildContext context) {
     var store = useWallet(context);
 
+    //log("public is "+store.state.publicKey.toString());
     useEffect(() {
       store.initialise();
       return null;

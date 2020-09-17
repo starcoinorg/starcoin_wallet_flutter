@@ -3,7 +3,7 @@ import 'package:etherwallet/service/address_service.dart';
 import 'package:etherwallet/service/configuration_service.dart';
 import 'package:etherwallet/service/contract_service.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:web3dart/web3dart.dart' as web3;
+import 'dart:developer';
 
 import 'wallet_state.dart';
 
@@ -35,11 +35,14 @@ class WalletHandler {
   }
 
   Future<void> _initialiseFromMnemonic(String entropyMnemonic) async {
-    final mnemonic = _addressService.entropyToMnemonic(entropyMnemonic);
-    final privateKey = _addressService.getPrivateKey(mnemonic);
+    //final mnemonic = _addressService.entropyToMnemonic(entropyMnemonic);
+    final privateKey = _addressService.getPrivateKey(entropyMnemonic);
     final address = await _addressService.getPublicAddress(privateKey);
 
-    _store.dispatch(InitialiseWallet(address.toString(), privateKey));
+    log("public key is "+address.keyPair.getPublicKeyHex());
+    log("address is "+address.getAddress());
+    log("private key is $privateKey");
+    _store.dispatch(InitialiseWallet(address.getAddress(), privateKey,address,address.keyPair.getPublicKeyHex()));
 
     await _initialise();
   }
@@ -47,7 +50,7 @@ class WalletHandler {
   Future<void> _initialiseFromPrivateKey(String privateKey) async {
     final address = await _addressService.getPublicAddress(privateKey);
 
-    _store.dispatch(InitialiseWallet(address.toString(), privateKey));
+    _store.dispatch(InitialiseWallet(address.getAddress(), privateKey,address,address.keyPair.getPublicKeyHex()));
 
     await _initialise();
   }
@@ -72,13 +75,14 @@ class WalletHandler {
   Future<void> fetchOwnBalance() async {
     _store.dispatch(UpdatingBalance());
 
-    var tokenBalance = await _contractService
-        .getTokenBalance(web3.EthereumAddress.fromHex(state.address));
+    var tokenBalance = BigInt.zero;
 
-    var ethBalance = await _contractService
-        .getEthBalance(web3.EthereumAddress.fromHex(state.address));
+    var stcBalance = await state.account.balanceOfStc();
 
-    _store.dispatch(BalanceUpdated(ethBalance.getInWei, tokenBalance));
+    // TODO
+    var balance=BigInt.from(stcBalance.low);
+    log("balance is $balance");
+    _store.dispatch(BalanceUpdated(balance, tokenBalance));
   }
 
   Future<void> resetWallet() async {

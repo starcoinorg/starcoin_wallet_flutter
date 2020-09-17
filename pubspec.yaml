@@ -36,11 +36,15 @@ dependencies:
   web_socket_channel: ^1.1.0
   intl: ^0.16.1
   flutter_spinkit: "^4.1.1+1"
-  firebase_analytics: ^5.0.11
+  #firebase_analytics: ^5.0.11
   url_launcher: ^5.4.1
   flutter_hooks: ^0.9.0
   built_value: ^7.1.0
   built_collection: ^4.3.2
+  starcoin_wallet:
+    #git:
+    #  url: git://github.com/starcoinorg/starcoin.dart
+    path: /Users/fanngyuan/Documents/workspace/starcoin_wallet.dart
 
 dev_dependencies:
   flutter_test:

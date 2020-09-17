@@ -1,5 +1,4 @@
 import 'package:etherwallet/components/copyButton/copy_button.dart';
-import 'package:etherwallet/utils/eth_amount_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -26,11 +25,11 @@ class Balance extends StatelessWidget {
             size: 150.0,
           ),
           Text(
-            "${EthAmountFormatter(tokenBalance).format()} tokens",
+            "${tokenBalance.toString()} tokens",
             style: Theme.of(context).textTheme.body2.apply(fontSizeDelta: 6),
           ),
           Text(
-            "${EthAmountFormatter(ethBalance).format()} eth",
+            "${ethBalance.toString()} STC",
             style:
                 Theme.of(context).textTheme.body2.apply(color: Colors.blueGrey),
           )

@@ -1,8 +1,8 @@
-import 'package:etherwallet/app_config.dart';
-import 'package:etherwallet/service/address_service.dart';
-import 'package:etherwallet/service/configuration_service.dart';
-import 'package:etherwallet/service/contract_service.dart';
-import 'package:etherwallet/utils/contract_parser.dart';
+import 'package:stcerwallet/app_config.dart';
+import 'package:stcerwallet/service/address_service.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
+import 'package:stcerwallet/service/contract_service.dart';
+import 'package:stcerwallet/utils/contract_parser.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

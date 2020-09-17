@@ -1,6 +1,6 @@
-import 'package:etherwallet/app_config.dart';
-import 'package:etherwallet/router.dart';
-import 'package:etherwallet/services_provider.dart';
+import 'package:stcerwallet/app_config.dart';
+import 'package:stcerwallet/router.dart';
+import 'package:stcerwallet/services_provider.dart';
 //import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,6 @@
-import 'package:etherwallet/service/configuration_service.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:etherwallet/utils/const.dart';
+import 'package:stcerwallet/utils/const.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:starcoin_wallet/wallet/helper.dart';
 import 'package:starcoin_wallet/wallet/keypair.dart';

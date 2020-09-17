@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:etherwallet/model/wallet_setup.dart';
-import 'package:etherwallet/service/address_service.dart';
+import 'package:stcerwallet/model/wallet_setup.dart';
+import 'package:stcerwallet/service/address_service.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'wallet_setup_state.dart';

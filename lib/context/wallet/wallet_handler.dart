@@ -1,7 +1,7 @@
-import 'package:etherwallet/model/wallet.dart';
-import 'package:etherwallet/service/address_service.dart';
-import 'package:etherwallet/service/configuration_service.dart';
-import 'package:etherwallet/service/contract_service.dart';
+import 'package:stcerwallet/model/wallet.dart';
+import 'package:stcerwallet/service/address_service.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
+import 'package:stcerwallet/service/contract_service.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'dart:developer';
 

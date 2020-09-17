@@ -1,6 +1,6 @@
-import 'package:etherwallet/components/wallet/confirm_mnemonic.dart';
-import 'package:etherwallet/context/setup/wallet_setup_provider.dart';
-import 'package:etherwallet/model/wallet_setup.dart';
+import 'package:stcerwallet/components/wallet/confirm_mnemonic.dart';
+import 'package:stcerwallet/context/setup/wallet_setup_provider.dart';
+import 'package:stcerwallet/model/wallet_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 

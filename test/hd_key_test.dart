@@ -1,5 +1,5 @@
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:etherwallet/utils/hd_key.dart';
+import 'package:stcerwallet/utils/hd_key.dart';
 import 'package:flutter_test/flutter_test.dart';
 import "package:hex/hex.dart";
 

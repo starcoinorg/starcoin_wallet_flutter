@@ -1,4 +1,4 @@
-import 'package:etherwallet/components/copyButton/copy_button.dart';
+import 'package:stcerwallet/components/copyButton/copy_button.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 

@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 //import 'dart:math';
 
-import 'package:etherwallet/context/transfer/wallet_transfer_state.dart';
-import 'package:etherwallet/model/wallet_transfer.dart';
-import 'package:etherwallet/service/configuration_service.dart';
-import 'package:etherwallet/utils/const.dart';
+import 'package:stcerwallet/context/transfer/wallet_transfer_state.dart';
+import 'package:stcerwallet/model/wallet_transfer.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
+import 'package:stcerwallet/utils/const.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:starcoin_wallet/serde/serde.dart';
 import 'package:starcoin_wallet/starcoin/starcoin.dart';

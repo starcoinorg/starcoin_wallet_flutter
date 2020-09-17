@@ -1,6 +1,6 @@
-import 'package:etherwallet/components/wallet/import_wallet_form.dart';
-import 'package:etherwallet/context/setup/wallet_setup_provider.dart';
-import 'package:etherwallet/model/wallet_setup.dart';
+import 'package:stcerwallet/components/wallet/import_wallet_form.dart';
+import 'package:stcerwallet/context/setup/wallet_setup_provider.dart';
+import 'package:stcerwallet/model/wallet_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 

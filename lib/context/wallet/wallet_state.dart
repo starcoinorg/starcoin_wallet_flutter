@@ -1,4 +1,4 @@
-import 'package:etherwallet/model/wallet.dart';
+import 'package:stcerwallet/model/wallet.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 
 abstract class WalletAction {}

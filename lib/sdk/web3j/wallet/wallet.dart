@@ -158,7 +158,7 @@ class Wallet {
     var derivator = new _ScryptKeyDerivator(32, 8192, 8, 1, salt);
 
     var uuid = new Uint8List(16);
-    uuidParser.v4(buffer: uuid);
+    uuidParser.v4buffer( uuid);
 
     var iv = dartRandom.nextBytes(128 ~/ 8);
 

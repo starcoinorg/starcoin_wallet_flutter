@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
 import 'package:stcerwallet/pages/main_page.dart';
 import 'package:stcerwallet/pages/market_page.dart';
@@ -8,8 +10,12 @@ import 'package:stcerwallet/pages/profile_page.dart';
 import 'package:stcerwallet/pages/wallet/init/identity_init_page.dart';
 import 'package:stcerwallet/pages/wallet/init/wallet_create_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_import_page.dart';
+import 'package:stcerwallet/pages/wallet/wallet_main_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_manage_page.dart';
 import 'package:stcerwallet/pages/wallet_page.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
+
+import 'package:stcerwallet/pages/intro_page.dart';
 
 class Page {
 
@@ -40,7 +46,17 @@ class Page {
 final List<Page> kAllPages = _buildPages();
 
 List<Page> _buildPages() {
+
   final List<Page> pages = <Page>[
+    new Page(routeName: '/', buildRoute: (BuildContext context){
+      var configurationService = Provider.of<ConfigurationService>(context);
+      if (configurationService.didSetupWallet())
+        return WalletProvider(builder: (context, store) {
+          return WalletMainPage("Your wallet");
+        });
+
+      return IntroPage();
+    }),
     new Page(routeName: MarketPage.routeName, buildRoute: (BuildContext context) => new MarketPage()),
     new Page(routeName: WalletPage.routeName, buildRoute: (BuildContext context) => new WalletPage()),
     new Page(routeName: ProfilePage.routeName, buildRoute: (BuildContext context) => new ProfilePage()),

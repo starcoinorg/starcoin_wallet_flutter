@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stcerwallet/model/wallet.dart';
+import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/list/list_item_widget.dart';

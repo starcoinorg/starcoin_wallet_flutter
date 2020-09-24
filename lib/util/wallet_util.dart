@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const BASEURL = "http://192.168.31.17:9850";
+
 class WalletUtil {
 
   static String getShortAddress(String address){

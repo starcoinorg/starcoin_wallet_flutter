@@ -1,36 +1,36 @@
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:starcoin_wallet/wallet/account.dart';
 
+part 'wallet.g.dart';
 
-class HDWallet {
+abstract class Wallet implements Built<Wallet, WalletBuilder> {
+  @nullable
+  String get address;
 
-  String name;
+  @nullable
+  String get publicKey;
 
-  String address;
+  @nullable
+  String get privateKey;
 
-  String keystore;
+  BigInt get tokenBalance;
 
-  String icon;
+  BigInt get ethBalance;
 
-  String mnemonic;
+  bool get loading;
 
-  HDWallet({this.name, this.address, this.keystore, this.icon, this.mnemonic});
+  @nullable
+  Account get account;
 
-  @override
-  int get hashCode {
-    return address.hashCode;
-  }
+  @nullable
+  BuiltList<String> get errors;
 
-  @override
-  bool operator ==(other) {
-    if (other is HDWallet){
-      return address.toLowerCase() == other.address.toLowerCase();
-    }
-    return false;
-  }
-
-  @override
-  String toString() {
-    return 'HDWallet{name: $name, address: $address, keystore: $keystore, icon: $icon, mnemonic: $mnemonic}';
-  }
-
-
+  Wallet._();
+  factory Wallet([void Function(WalletBuilder) updates]) => _$Wallet((b) => b
+    ..tokenBalance = BigInt.from(0)
+    ..ethBalance = BigInt.from(0)
+    ..errors = BuiltList<String>().toBuilder()
+    ..loading = false
+    ..update(updates));
 }

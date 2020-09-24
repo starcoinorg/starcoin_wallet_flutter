@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stcerwallet/model/wallet.dart';
+import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/util/wallet_util.dart';
 
 class WalletWidget extends StatelessWidget {

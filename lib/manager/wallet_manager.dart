@@ -1,5 +1,5 @@
 
-import 'package:stcerwallet/model/wallet.dart';
+import 'package:stcerwallet/model/hdwallet.dart';
 
 class WalletManager {
 

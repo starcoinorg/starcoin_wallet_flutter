@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
 import 'package:stcerwallet/model/assets.dart';
-import 'package:stcerwallet/model/wallet.dart';
+import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/pages/wallet/receive_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_manage_page.dart';
+import 'package:stcerwallet/pages/wallet/wallet_transfer_page.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/token_item_widget.dart';
 import 'package:stcerwallet/view/wallet_widget.dart';
@@ -107,7 +108,9 @@ class WalletPage extends StatelessWidget {
           icon: Image.asset('assets/images/ic_qrcode_scan.png',
               width: iconSize, height: iconSize),
           onPressed: () {
-            print('scan');
+            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+              return WalletTransferPage(title: "Send Tokens");
+            }));
           },
         ),
       ],

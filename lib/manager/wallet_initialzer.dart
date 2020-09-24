@@ -3,7 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:stcerwallet/model/wallet.dart';
+import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/sdk/bip32/extended_private_key.dart';
 import 'package:stcerwallet/sdk/bip32/network.dart';
 import 'package:stcerwallet/sdk/bip39/english.dart';

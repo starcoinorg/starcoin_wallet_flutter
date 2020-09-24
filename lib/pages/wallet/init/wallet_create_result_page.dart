@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stcerwallet/model/wallet.dart';
+import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/pages/wallet/init/mnemonic_ensure_page.dart';
 import 'package:stcerwallet/style/styles.dart';
 

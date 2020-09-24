@@ -41,14 +41,6 @@ class App extends StatelessWidget {
         }));
   }
 
-  _buildApp() {
-    return new MaterialApp(
-      theme: store.state.theme.themeData,
-      routes: _buildRoutes(),
-      home: new MainPage(),
-    );
-  }
-
   Map<String, WidgetBuilder> _buildRoutes() {
     return new Map<String, WidgetBuilder>.fromIterable(
       kAllPages,

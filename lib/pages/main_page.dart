@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/pages/market_page.dart';
 import 'package:stcerwallet/pages/profile_page.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
+import 'package:stcerwallet/pages/wallet/wallet_main_page.dart';
 import 'package:stcerwallet/pages/wallet_page.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/view/navigation_icon_view.dart';
+
+import 'intro_page.dart';
 
 class MainPage extends StatefulWidget {
   static const String routeName = Routes.main + "/index";
@@ -57,6 +63,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
         pageController.jumpToPage(index);
       },
     );
+
+
+    var configurationService = Provider.of<ConfigurationService>(context);
+    if (configurationService.didSetupWallet())
+      return WalletProvider(builder: (context, store) {
+        return WalletMainPage("Your wallet");
+      });
+
+    return IntroPage();
 
     return new Scaffold(
       body: new PageView(

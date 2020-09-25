@@ -48,15 +48,6 @@ final List<Page> kAllPages = _buildPages();
 List<Page> _buildPages() {
 
   final List<Page> pages = <Page>[
-    new Page(routeName: '/', buildRoute: (BuildContext context){
-      var configurationService = Provider.of<ConfigurationService>(context);
-      if (configurationService.didSetupWallet())
-        return WalletProvider(builder: (context, store) {
-          return WalletMainPage("Your wallet");
-        });
-
-      return IntroPage();
-    }),
     new Page(routeName: MarketPage.routeName, buildRoute: (BuildContext context) => new MarketPage()),
     new Page(routeName: WalletPage.routeName, buildRoute: (BuildContext context) => new WalletPage()),
     new Page(routeName: ProfilePage.routeName, buildRoute: (BuildContext context) => new ProfilePage()),

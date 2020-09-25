@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:stcerwallet/context/wallet/wallet_provider.dart';
-import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
-import 'package:stcerwallet/pages/main_page.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:stcerwallet/context/setup/wallet_setup_provider.dart';
 import 'package:stcerwallet/pages/market_page.dart';
 import 'package:stcerwallet/pages/profile/about_page.dart';
 import 'package:stcerwallet/pages/profile/settings_page.dart';
 import 'package:stcerwallet/pages/profile_page.dart';
 import 'package:stcerwallet/pages/wallet/init/identity_init_page.dart';
-import 'package:stcerwallet/pages/wallet/init/wallet_create_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_import_page.dart';
-import 'package:stcerwallet/pages/wallet/wallet_main_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_manage_page.dart';
 import 'package:stcerwallet/pages/wallet_page.dart';
-import 'package:stcerwallet/service/configuration_service.dart';
-
-import 'package:stcerwallet/pages/intro_page.dart';
+import 'package:stcerwallet/pages/wallet/wallet_create_page.dart';
 
 class Page {
-
   final String title;
 
   final IconData leadingIcon;
@@ -29,35 +22,62 @@ class Page {
 
   final WidgetBuilder buildRoute;
 
-  Page({
-    this.title,
-    this.leadingIcon, this.leadingEvent,
-    @required this.routeName,
-    @required this.buildRoute
-  });
+  Page(
+      {this.title,
+      this.leadingIcon,
+      this.leadingEvent,
+      @required this.routeName,
+      @required this.buildRoute});
 
   @override
   String toString() {
     return 'Page{routeName: $routeName, buildRoute: $buildRoute}';
   }
-
 }
 
 final List<Page> kAllPages = _buildPages();
 
 List<Page> _buildPages() {
-
   final List<Page> pages = <Page>[
-    new Page(routeName: MarketPage.routeName, buildRoute: (BuildContext context) => new MarketPage()),
-    new Page(routeName: WalletPage.routeName, buildRoute: (BuildContext context) => new WalletPage()),
-    new Page(routeName: ProfilePage.routeName, buildRoute: (BuildContext context) => new ProfilePage()),
-    new Page(routeName: SettingsPage.routeName, buildRoute: (BuildContext context) => new SettingsPage()),
-    new Page(routeName: WalletManagePage.routeName, buildRoute: (BuildContext context) => new WalletManagePage()),
-    new Page(routeName: WalletImportPage.routeName, buildRoute: (BuildContext context) => new WalletImportPage()),
-    new Page(routeName: IdentityInitPage.routeName, buildRoute: (BuildContext context) => new IdentityInitPage()),
-    new Page(routeName: AboutPage.routeName, buildRoute: (BuildContext context) => new AboutPage()),
-    new Page(routeName: WalletCreatePage.routeName, buildRoute: (BuildContext context) => new WalletCreatePage()),
+    new Page(
+        routeName: MarketPage.routeName,
+        buildRoute: (BuildContext context) => new MarketPage()),
+    new Page(
+        routeName: WalletPage.routeName,
+        buildRoute: (BuildContext context) => new WalletPage()),
+    new Page(
+        routeName: ProfilePage.routeName,
+        buildRoute: (BuildContext context) => new ProfilePage()),
+    new Page(
+        routeName: SettingsPage.routeName,
+        buildRoute: (BuildContext context) => new SettingsPage()),
+    new Page(
+        routeName: WalletManagePage.routeName,
+        buildRoute: (BuildContext context) => new WalletManagePage()),
+    new Page(
+        routeName: WalletImportPage.routeName,
+        buildRoute: (BuildContext context) => WalletSetupProvider(
+          builder: (context, store) {
+            return WalletImportPage("Import wallet");
+          },
+        )),
+    new Page(
+        routeName: IdentityInitPage.routeName,
+        buildRoute: (BuildContext context) => new IdentityInitPage()),
+    new Page(
+        routeName: AboutPage.routeName,
+        buildRoute: (BuildContext context) => new AboutPage()),
+    new Page(
+        routeName: WalletCreatePage.routeName,
+        buildRoute: (BuildContext context) =>
+            WalletSetupProvider(builder: (context, store) {
+              useEffect(() {
+                store.generateMnemonic();
+                return null;
+              }, []);
 
+              return WalletCreatePage("Create Wallet");
+            })),
   ];
   return pages;
 }

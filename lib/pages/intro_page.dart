@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stcerwallet/pages/wallet/wallet_create_page.dart';
+import 'package:stcerwallet/pages/wallet/wallet_import_page.dart';
 
 class IntroPage extends StatelessWidget {
   @override
@@ -12,7 +14,7 @@ class IntroPage extends StatelessWidget {
             RaisedButton(
               child: Text("Create new wallet"),
               onPressed: () {
-                Navigator.of(context).pushNamed("/create");
+                Navigator.of(context).pushNamed(WalletCreatePage.routeName);
               },
             ),
             Container(
@@ -20,7 +22,7 @@ class IntroPage extends StatelessWidget {
               child: OutlineButton(
                 child: Text("Import wallet"),
                 onPressed: () {
-                  Navigator.of(context).pushNamed("/import");
+                  Navigator.of(context).pushNamed(WalletImportPage.routeName);
                 },
               ),
             )

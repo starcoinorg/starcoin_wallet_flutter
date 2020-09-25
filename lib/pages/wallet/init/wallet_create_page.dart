@@ -185,21 +185,15 @@ class _WalletCreateState extends State<WalletCreatePage> {
 //        password: password, name: name);
 //  }
 
-  _handleCreateWallet() {
+  _handleCreateWallet() async {
     //todo 校验
     String password = _formData.password;
     String name = _formData.name;
     print("before:${new DateTime.now()}\n");
-    new Future(() {
-      return WalletInitializer.generateWallet(password: password, name: name);
-    }).then((wallet){
-      print("after:${new DateTime.now()}\n");
-    });
-//    new Future.delayed(Duration(milliseconds: 4000)).then((_) {
-//      print("after:${new DateTime.now()}\n");
-//    });
-//    Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-//      return WalletCreateResultPage(wallet);
-//    }));
+
+    final wallet =await WalletInitializer.generateWallet(password: password, name: name);
+    Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+     return WalletCreateResultPage(wallet);
+    }));
   }
 }

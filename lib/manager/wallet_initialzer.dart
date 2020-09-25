@@ -33,9 +33,6 @@ class WalletInitializer {
     print('mnemonic:$mnemonic');
     AddressIndex addressIndex =
         BIP44.m().purpose44().coinType(60).account(0).external().address(0);
-    return new Future(() async {
-      return await _calculateSeed(mnemonic);
-    });
 //    var rootKey = ExtendedPrivateKey.fromSeed(seed, Bitcoin.MAIN_NET);
 
 //    var extendedBase58 = rootKey.extendedBase58();

@@ -3,7 +3,7 @@ import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:stcerwallet/pages/wallet/wallet_import_page.dart';
+import 'package:stcerwallet/pages/wallet/init/wallet_import_page.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/wallet_item_widget.dart';
 

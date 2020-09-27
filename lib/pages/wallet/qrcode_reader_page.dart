@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:developer';
+
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/util/scanner_utils.dart';
 import 'package:camera/camera.dart';
@@ -26,8 +28,8 @@ class QRCodeReaderPage extends StatefulWidget {
 }
 
 class _QRCodeReaderPageState extends State<QRCodeReaderPage> {
-  static final RegExp _basicAddress =
-      RegExp(r'^(0x)?[0-9a-f]{40}', caseSensitive: false);
+   static final RegExp _basicAddress =
+       RegExp(r'0x^[0-9a-f]', caseSensitive: false);
   List<Barcode> _scanResults;
   CameraController _camera;
   bool _isDetecting = false;
@@ -69,6 +71,9 @@ class _QRCodeReaderPageState extends State<QRCodeReaderPage> {
       ).then((dynamic results) => results as List<Barcode>).then(
         (List<Barcode> results) {
           setState(() {
+            for(Barcode barcode in results){
+              log("barcode is "+barcode.displayValue);
+            }
             _scanResults = results
                 .where((item) => _basicAddress.hasMatch(item.displayValue))
                 .toList();

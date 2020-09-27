@@ -29,8 +29,8 @@ class WalletTransferPage extends HookWidget {
               Navigator.of(context).pushNamed(
                 QRCodeReaderPage.routeName,
                 arguments: (scannedAddress) async {
-                  qrcodeAddress.value = scannedAddress.toString();
-                },
+                    qrcodeAddress.value = scannedAddress.toString();
+                  },
               );
             }
         ),
@@ -42,7 +42,7 @@ class WalletTransferPage extends HookWidget {
         actions: reader,
       ),
       body: TransferForm(
-        address: qrcodeAddress.value,
+        publicKey: qrcodeAddress.value,
         onSubmit: (address,publicKey, amount) async {
           final success = await transferStore.transfer(address, publicKey,amount);
 

@@ -94,7 +94,7 @@ class WalletPage extends HookWidget {
     final address = store.state.address;
     final publicKey = store.state.account.keyPair.getPublicKeyHex();
 
-    return AccountState(balance:stcBalance.toBigInt(),sequenceNumber:BigInt.zero,address: address,publicKey: publicKey);
+    return AccountState(balance:stcBalance.toBigInt(),sequenceNumber:BigInt.zero,address: address,publicKey: "0x"+publicKey);
   }
 
   Widget _appBar(BuildContext context,AccountState state) {

@@ -23,11 +23,11 @@ class ReceivePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             QrImage(
-              data: addressWithKey ?? "",
+              data: publicKey ?? "",
               size: 150.0,
             ),
             SelectableText("Address is :"+address ?? "",),
-            SelectableText("Public Key is :0x"+publicKey ?? ""),
+            SelectableText("Public Key is :"+publicKey ?? ""),
           ],
         ),
       ));

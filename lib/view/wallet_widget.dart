@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/util/wallet_util.dart';
 
 class WalletWidget extends StatelessWidget {
   final HDWallet wallet;
 
+  final AccountState state;
+
   final VoidCallback onMoreTap;
 
-  WalletWidget({this.wallet,this.onMoreTap});
+  WalletWidget({this.wallet,this.onMoreTap,this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +83,9 @@ class WalletWidget extends StatelessWidget {
             child: new Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                new Text(
-                  '\$',
-                  style: TextStyle(color: Colors.white),
-                ),
                 new Padding(
                   padding: EdgeInsets.only(right: 20.0),
-                  child: new Text('55.28',
+                  child: new Text(state.balance.toString(),
                       style: TextStyle(color: Colors.white, fontSize: 24.0)),
                 )
               ],

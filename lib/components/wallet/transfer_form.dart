@@ -7,16 +7,19 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 class TransferForm extends HookWidget {
   TransferForm({
-    this.address,
+    @required this.address,
+    @required this.publicKey,
     @required this.onSubmit,
   });
 
   final String address;
-  final void Function(String address, String amount) onSubmit;
+  final String publicKey;
+  final void Function(String address,String publicKey ,String amount) onSubmit;
 
   @override
   Widget build(BuildContext context) {
     final toController = useTextEditingController(text: address);
+    final toPublickeyController = useTextEditingController();
     final amountController = useTextEditingController();
     //final transferStore = useWalletTransfer(context);
 
@@ -37,6 +40,7 @@ class TransferForm extends HookWidget {
                 onPressed: () {
                   this.onSubmit(
                     toController.value.text,
+                    toPublickeyController.value.text,
                     amountController.value.text,
                   );
                 },
@@ -46,7 +50,12 @@ class TransferForm extends HookWidget {
               //PaperValidationSummary(null),
               PaperInput(
                 controller: toController,
-                labelText: 'To',
+                labelText: 'To Address',
+                hintText: 'Type the destination address',
+              ),
+              PaperInput(
+                controller: toPublickeyController,
+                labelText: 'To Public Key',
                 hintText: 'Type the destination address',
               ),
               PaperInput(

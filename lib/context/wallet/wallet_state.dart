@@ -25,6 +25,7 @@ Wallet reducer(Wallet state, WalletAction action) {
       ..address = action.address
       ..privateKey = action.privateKey
       ..account = action.account
+      ..publicKey = action.publicKey
     );
   }
 
@@ -36,7 +37,8 @@ Wallet reducer(Wallet state, WalletAction action) {
     return state.rebuild((b) => b
       ..loading = false
       ..ethBalance = action.ethBalance
-      ..tokenBalance = action.tokenBalance);
+      ..tokenBalance = action.tokenBalance
+    );
   }
 
   return state;

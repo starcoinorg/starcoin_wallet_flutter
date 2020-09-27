@@ -24,7 +24,7 @@ class WalletTransferHandler {
 
   WalletTransfer get state => _store.state;
 
-  Future<bool> transfer(String to, String amount) async {
+  Future<bool> transfer(String to,String publicKey ,String amount) async {
     var completer = new Completer<bool>();
     var privateKey = _configurationService.getPrivateKey();
 
@@ -34,7 +34,7 @@ class WalletTransferHandler {
     try {
 
       var account = Account.fromPrivateKey(Helpers.hexToBytes(privateKey),BASEURL);
-      await account.transferSTC(Int128(0,int.parse(amount)),AccountAddress(Helpers.hexToBytes(to)),Bytes(account.keyPair.getPublicKey()));
+      await account.transferSTC(Int128(0,int.parse(amount)),AccountAddress(Helpers.hexToBytes(to)),Bytes(Helpers.hexToBytes(publicKey)));
       completer.complete(true);
       // await _contractService.send(
       //   privateKey,

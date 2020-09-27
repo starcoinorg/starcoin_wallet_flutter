@@ -3,21 +3,34 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class ReceivePage extends StatelessWidget {
 
-  final String _address;
+  final String address;
+
+  final String publicKey;
 
   final String _avatar;
 
-  ReceivePage.name(this._address, this._avatar);
+  ReceivePage.name(this.address,this.publicKey, this._avatar);
 
   @override
   Widget build(BuildContext context) {
+    //final ThemeData theme = Theme.of(context);
+
+    final addressWithKey = publicKey+address;
     return new Scaffold(
       appBar: _appBar(context),
-      body: new Center(child: new QrImage(
-        data: "1234567890",
-        size: 200.0,
-      ),),
-    );
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            QrImage(
+              data: addressWithKey ?? "",
+              size: 150.0,
+            ),
+            SelectableText("Address is :"+address ?? "",),
+            SelectableText("Public Key is :0x"+publicKey ?? ""),
+          ],
+        ),
+      ));
   }
 
   _appBar(BuildContext context) {

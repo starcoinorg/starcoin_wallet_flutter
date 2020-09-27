@@ -1,6 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:starcoin_wallet/wallet/account.dart';
+import 'package:stcerwallet/context/wallet/wallet_handler.dart';
+import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
 import 'package:stcerwallet/model/assets.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
@@ -12,7 +17,7 @@ import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/token_item_widget.dart';
 import 'package:stcerwallet/view/wallet_widget.dart';
 
-class WalletPage extends StatelessWidget {
+class WalletPage extends HookWidget {
   static const String routeName = Routes.wallet + "/index";
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -29,20 +34,45 @@ class WalletPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      appBar: _appBar(context),
-      body: new RefreshIndicator(
-//          color: theme.accentColor,
-          key: _refreshIndicatorKey,
-          child: ListView(children: _body(context)),
-          onRefresh: _handleRefresh),
-    );
+    //final ThemeData theme = Theme.of(context);
+    final store = useWallet(context);
+
+    useEffect(() {
+      store.initialise();
+      return null;
+    }, []);
+
+    return FutureBuilder<AccountState>(
+        future: getAccountState(store),
+        builder: (context, AsyncSnapshot<AccountState> snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              key: _scaffoldKey,
+              backgroundColor: Colors.white,
+              appBar: _appBar(context,snapshot.data),
+              body: new RefreshIndicator(
+                  key: _refreshIndicatorKey,
+                  child: ListView(children: _body(context, snapshot.data)),
+                  onRefresh: _handleRefresh),
+            );
+          } else {
+            return new Center( child:Text("Can't access starcoin node",textAlign: TextAlign.center,));
+          }
+        });
+
+//     return Scaffold(
+//       key: _scaffoldKey,
+//       backgroundColor: Colors.white,
+//       appBar: _appBar(context),
+//       body: new RefreshIndicator(
+// //          color: theme.accentColor,
+//           key: _refreshIndicatorKey,
+//           child: ListView(children: _body(context,store)),
+//           onRefresh: _handleRefresh),
+//     );
   }
 
-  Future<Null> _handleRefresh() {
+  Future<Null> _handleRefresh() async {
     final Completer<Null> completer = new Completer<Null>();
     new Timer(const Duration(seconds: 2), () {
       completer.complete(null);
@@ -59,7 +89,15 @@ class WalletPage extends StatelessWidget {
     });
   }
 
-  Widget _appBar(BuildContext context) {
+  Future<AccountState> getAccountState(WalletHandler store) async {
+    final stcBalance = await store.state.account.balanceOfStc();
+    final address = store.state.address;
+    final publicKey = store.state.account.keyPair.getPublicKeyHex();
+
+    return AccountState(balance:stcBalance.toBigInt(),sequenceNumber:BigInt.zero,address: address,publicKey: publicKey);
+  }
+
+  Widget _appBar(BuildContext context,AccountState state) {
     final ThemeData theme = Theme.of(context);
     final double iconSize = 28.0;
     final double coinTypeSize = 12.0;
@@ -73,7 +111,7 @@ class WalletPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Text(
-            'ETH',
+            'STC',
             style: new TextStyle(color: Colors.black, fontSize: coinTypeSize),
           ),
           new Icon(
@@ -100,17 +138,17 @@ class WalletPage extends StatelessWidget {
               width: iconSize, height: iconSize),
           onPressed: () {
             Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-              return ReceivePage.name('0xafb87869fd4132e8700e8678765cecd6b259cda8', 'assets/images/ic_default_wallet_avatar_4.png');
+              return ReceivePage.name(
+                  state.address,
+                  state.publicKey,
+                  'assets/images/ic_default_wallet_avatar_4.png');
             }));
           }),
       actions: <Widget>[
         new IconButton(
-          icon: Image.asset('assets/images/ic_qrcode_scan.png',
-              width: iconSize, height: iconSize),
+          icon: Icon(Icons.send, color: theme.iconTheme.color),
           onPressed: () {
-            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-              return WalletTransferPage(title: "Send Tokens");
-            }));
+            Navigator.of(context).pushNamed(WalletTransferPage.routeName);
           },
         ),
       ],
@@ -120,14 +158,14 @@ class WalletPage extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(new PageRouteBuilder(pageBuilder:
               (BuildContext context, Animation<double> animation,
-              Animation<double> secondaryAnimation) {
+                  Animation<double> secondaryAnimation) {
             return new WalletManagePage();
           }, transitionsBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-              Widget child,
-              ) {
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
             // 添加一个平移动画
             return Routes.bottom2TopTransition(animation, child);
           }));
@@ -136,21 +174,27 @@ class WalletPage extends StatelessWidget {
     );
   }
 
-  List<Widget> _body(BuildContext context) {
+  List<Widget> _body(BuildContext context, AccountState state) {
     List<Widget> list = List();
     HDWallet wallet = new HDWallet();
-    wallet.address = "0xafb87869fd4132e8700e8678765cecd6b259cda8";
-    wallet.name = "HDWallet";
-    Widget currentWalletWidget = new WalletWidget(wallet: wallet,onMoreTap: (){
-      Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-        return new SpecificWalletManagePage(wallet: wallet,);
-      }));
-    },);
+    wallet.address = state.address;
+    wallet.name = "STC Wallet";
+    Widget currentWalletWidget = new WalletWidget(
+      wallet: wallet,
+      onMoreTap: () {
+        Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+          return new SpecificWalletManagePage(
+            wallet: wallet,
+          );
+        }));
+      },
+      state: state,
+    );
     Widget assetsMarkWidget = _bodyLabel(context);
 
     list.add(currentWalletWidget);
     list.add(assetsMarkWidget);
-    List<Widget> assetsWidgetList = _assets.map<Widget>((assets){
+    List<Widget> assetsWidgetList = _assets.map<Widget>((assets) {
       return new TokenItemWidget(assets);
     }).toList();
     list.addAll(assetsWidgetList);

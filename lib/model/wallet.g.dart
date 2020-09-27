@@ -63,6 +63,7 @@ class _$Wallet extends Wallet {
     return other is Wallet &&
         address == other.address &&
         privateKey == other.privateKey &&
+        publicKey == other.publicKey &&
         tokenBalance == other.tokenBalance &&
         ethBalance == other.ethBalance &&
         loading == other.loading &&

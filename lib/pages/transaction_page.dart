@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
+import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/pages/transactions/transaction_item.dart';
 
 List<Map<String, String>> transactions = [
@@ -59,14 +60,29 @@ class TransactionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: new Text('Transactions'),
+            backgroundColor: Colors.white,
+            brightness: Brightness.light,
+            bottom: new PreferredSize(
+                child: Divider(
+                  height: Dimens.line,
+                  color: theme.dividerColor,
+                ),
+                preferredSize: new Size.fromHeight(Dimens.line)),
+            elevation: 0.0,
+            centerTitle: true,
+            title: new Text(
+              'Transaction List',
+              style: new TextStyle(color: Colors.black, fontSize: 12),
+            ),
           ),
           body: Container(
-            padding: EdgeInsets.only(left: 16.0),
+            padding: EdgeInsets.only(left: 16.0, right: 16.0),
             child: ListView.builder(
               itemCount: transactions.length,
               itemBuilder: (ctx, i) {

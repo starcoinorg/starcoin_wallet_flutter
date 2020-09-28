@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -49,14 +48,18 @@ class WalletPage extends HookWidget {
             return Scaffold(
               key: _scaffoldKey,
               backgroundColor: Colors.white,
-              appBar: _appBar(context,snapshot.data),
+              appBar: _appBar(context, snapshot.data),
               body: new RefreshIndicator(
                   key: _refreshIndicatorKey,
                   child: ListView(children: _body(context, snapshot.data)),
                   onRefresh: _handleRefresh),
             );
           } else {
-            return new Center( child:Text("Can't access starcoin node",textAlign: TextAlign.center,));
+            return new Center(
+                child: Text(
+              "Can't access starcoin node",
+              textAlign: TextAlign.center,
+            ));
           }
         });
 
@@ -94,10 +97,14 @@ class WalletPage extends HookWidget {
     final address = store.state.address;
     final publicKey = store.state.account.keyPair.getPublicKeyHex();
 
-    return AccountState(balance:stcBalance.toBigInt(),sequenceNumber:BigInt.zero,address: address,publicKey: "0x"+publicKey);
+    return AccountState(
+        balance: stcBalance.toBigInt(),
+        sequenceNumber: BigInt.zero,
+        address: address,
+        publicKey: "0x" + publicKey);
   }
 
-  Widget _appBar(BuildContext context,AccountState state) {
+  Widget _appBar(BuildContext context, AccountState state) {
     final ThemeData theme = Theme.of(context);
     final double iconSize = 28.0;
     final double coinTypeSize = 12.0;
@@ -138,9 +145,7 @@ class WalletPage extends HookWidget {
               width: iconSize, height: iconSize),
           onPressed: () {
             Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-              return ReceivePage.name(
-                  state.address,
-                  state.publicKey,
+              return ReceivePage.name(state.address, state.publicKey,
                   'assets/images/ic_default_wallet_avatar_4.png');
             }));
           }),

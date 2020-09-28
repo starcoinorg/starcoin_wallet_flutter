@@ -4,7 +4,7 @@ import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/pages/market_page.dart';
 import 'package:stcerwallet/pages/profile_page.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
-import 'package:stcerwallet/pages/wallet/wallet_main_page.dart';
+import 'package:stcerwallet/pages/transaction_page.dart';
 import 'package:stcerwallet/pages/wallet_page.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/view/navigation_icon_view.dart';
@@ -20,7 +20,7 @@ class MainPage extends StatefulWidget {
   }
 }
 
-class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   int _currentIndex = 0;
   BottomNavigationBarType _type = BottomNavigationBarType.fixed;
   List<NavigationIconView> _navigationViews;
@@ -38,7 +38,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       ),
       new NavigationIconView(
         icon: const Icon(Icons.trending_up),
-        title: 'Market',
+        title: 'Transactions',
         vsync: this,
       ),
       new NavigationIconView(
@@ -64,7 +64,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       },
     );
 
-
     var configurationService = Provider.of<ConfigurationService>(context);
     if (configurationService.didSetupWallet())
       return WalletProvider(builder: (context, store) {
@@ -72,7 +71,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
           body: new PageView(
             children: <Widget>[
               new WalletPage(),
-              new MarketPage(),
+              new TransactionsPage(),
               new ProfilePage()
             ],
             controller: pageController,
@@ -85,7 +84,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       });
 
     return IntroPage();
-
   }
 
   void onPageChanged(int index) {

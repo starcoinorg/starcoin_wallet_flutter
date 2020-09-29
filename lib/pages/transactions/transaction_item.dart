@@ -1,10 +1,14 @@
+
 import 'package:flutter/material.dart';
+import 'package:stcerwallet/pages/transactions/transaction_detail.dart';
+import 'package:stcerwallet/style/styles.dart';
 
 Color darkBlue = Color(0xff071d40);
 Color lightBlue = Color(0xff1b4dff);
 
 class TransactionItem extends StatelessWidget {
   final Map<String, String> transaction;
+
   const TransactionItem({
     Key key,
     this.transaction,
@@ -12,7 +16,11 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return new InkWell(
+        onTap: () {
+          Navigator.pushNamed(context,TransactionDetailPage.routeName);
+        },
+        child: Column(
       children: <Widget>[
         Row(
           children: <Widget>[
@@ -25,15 +33,6 @@ class TransactionItem extends StatelessWidget {
                     .apply(color: darkBlue, fontWeightDelta: 2),
               ),
             ),
-            SizedBox(width: 15),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 9.0, vertical: 5.0),
-              decoration: BoxDecoration(
-                color: Color(0xffd5d7dc),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Text("Pairing"),
-            )
           ],
         ),
         SizedBox(height: 11),
@@ -46,8 +45,21 @@ class TransactionItem extends StatelessWidget {
         SizedBox(height: 5),
         Row(
           children: <Widget>[
-            Text("Transaction Number: "),
-            Text("${transaction['transaction_number']}")
+            new Expanded(
+                child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                  Text("Transaction Number: "),
+                  Text("${transaction['transaction_number']}")
+                ])),
+            new Padding(
+              padding: EdgeInsets.only(right: Dimens.padding),
+              child: new Icon(
+                Icons.keyboard_arrow_right,
+                size: Dimens.itemIconSize,
+              ),
+            ),
           ],
         ),
         SizedBox(height: 5),
@@ -58,6 +70,6 @@ class TransactionItem extends StatelessWidget {
           height: 21,
         ),
       ],
-    );
+    ));
   }
 }

@@ -6,6 +6,7 @@ import 'package:stcerwallet/pages/market_page.dart';
 import 'package:stcerwallet/pages/profile/about_page.dart';
 import 'package:stcerwallet/pages/profile/settings_page.dart';
 import 'package:stcerwallet/pages/profile_page.dart';
+import 'package:stcerwallet/pages/transactions/transaction_detail.dart';
 import 'package:stcerwallet/pages/wallet/init/identity_init_page.dart';
 import 'package:stcerwallet/pages/wallet/qrcode_reader_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_import_page.dart';
@@ -88,6 +89,9 @@ List<Page> _buildPages() {
             WalletTransferProvider(builder: (context, store) {
               return WalletTransferPage(title: "Send Tokens");
             })),
+    new Page(
+        routeName: TransactionDetailPage.routeName,
+        buildRoute: (BuildContext context) => new TransactionDetailPage()),
   ];
   if(Platform.isIOS||Platform.isAndroid){
     pages.add(new Page(

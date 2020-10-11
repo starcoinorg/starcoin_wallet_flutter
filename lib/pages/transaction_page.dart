@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:stcerwallet/context/wallet/wallet_handler.dart';
+import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/pages/transactions/transaction_item.dart';
@@ -70,6 +73,8 @@ class TransactionsPageState extends State<TransactionsPage> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   bool isLoading = false;
+  WalletHandler store;
+  bool needInit = true;
 
   @override
   void initState() {
@@ -80,6 +85,15 @@ class TransactionsPageState extends State<TransactionsPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+
+    setState(() {
+      if(needInit){
+        store = useWallet(context);
+        store.initialise();
+      }
+      needInit=false;
+      return null;
+    });
 
     return SafeArea(
       child: Scaffold(

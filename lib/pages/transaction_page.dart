@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:stcerwallet/context/wallet/wallet_handler.dart';
 import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/pages/transactions/transaction_item.dart';
+import 'package:starcoin_wallet/wallet/wallet_client.dart';
+import 'package:stcerwallet/util/wallet_util.dart';
+import 'package:optional/optional.dart';
 
 List<Map<String, String>> transactions = [
   {
@@ -75,6 +77,7 @@ class TransactionsPageState extends State<TransactionsPage> {
   bool isLoading = false;
   WalletHandler store;
   bool needInit = true;
+  List<TransactionWithInfo> txns;
 
   @override
   void initState() {
@@ -87,53 +90,75 @@ class TransactionsPageState extends State<TransactionsPage> {
     final ThemeData theme = Theme.of(context);
 
     setState(() {
-      if(needInit){
+      if (needInit) {
         store = useWallet(context);
         store.initialise();
       }
-      needInit=false;
+      needInit = false;
       return null;
     });
 
-    return SafeArea(
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            brightness: Brightness.light,
-            bottom: new PreferredSize(
-                child: Divider(
-                  height: Dimens.line,
-                  color: theme.dividerColor,
-                ),
-                preferredSize: new Size.fromHeight(Dimens.line)),
-            elevation: 0.0,
-            centerTitle: true,
-            title: new Text(
-              'Transaction List',
-              style: new TextStyle(color: Colors.black, fontSize: 12),
-            ),
-          ),
-          body: Container(
-              padding: EdgeInsets.only(left: 24.0, right: 24.0),
-              child: NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification scrollNotification) {
-                    if (scrollNotification.metrics.pixels >=
-                        scrollNotification.metrics.maxScrollExtent) {
-                      _loadMore();
-                    }
-                    return false;
-                  },
-                  child: RefreshIndicator(
-                    child: ListView.builder(
-                      itemCount: transactions.length,
-                      itemBuilder: (ctx, i) {
-                        return TransactionItem(transaction: transactions[i]);
-                      },
+    return FutureBuilder<List<TransactionWithInfo>>(
+        future: getAccountState(store),
+        builder: (context, AsyncSnapshot<List<TransactionWithInfo>> snapshot) {
+          if (snapshot.hasData) {
+            this.txns = snapshot.data;
+            return SafeArea(
+              child: Scaffold(
+                  backgroundColor: Colors.white,
+                  appBar: AppBar(
+                    backgroundColor: Colors.white,
+                    brightness: Brightness.light,
+                    bottom: new PreferredSize(
+                        child: Divider(
+                          height: Dimens.line,
+                          color: theme.dividerColor,
+                        ),
+                        preferredSize: new Size.fromHeight(Dimens.line)),
+                    elevation: 0.0,
+                    centerTitle: true,
+                    title: new Text(
+                      'Transaction List',
+                      style: new TextStyle(color: Colors.black, fontSize: 12),
                     ),
-                    onRefresh: _handleRefresh,
-                  )))),
-    );
+                  ),
+                  body: Container(
+                      padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                      child: NotificationListener<ScrollNotification>(
+                          onNotification:
+                              (ScrollNotification scrollNotification) {
+                            if (scrollNotification.metrics.pixels >=
+                                scrollNotification.metrics.maxScrollExtent) {
+                              _loadMore();
+                            }
+                            return false;
+                          },
+                          child: RefreshIndicator(
+                            child: ListView.builder(
+                              itemCount: this.txns.length,
+                              itemBuilder: (ctx, i) {
+                                return TransactionItem(
+                                    transactionWithInfo: this.txns[i]);
+                              },
+                            ),
+                            onRefresh: _handleRefresh,
+                          )))),
+            );
+          } else {
+            return new Center(
+                child: Text(
+              "Can't access starcoin node",
+              textAlign: TextAlign.center,
+            ));
+          }
+        });
+  }
+
+  Future<List<TransactionWithInfo>> getAccountState(WalletHandler store) async {
+    final walletClient = new WalletClient(BASEURL);
+    final txnList = await walletClient.getTxnList(store.state.account,
+        Optional.of(0), Optional.empty(), Optional.empty());
+    return txnList;
   }
 
   // 上拉加载
@@ -142,18 +167,9 @@ class TransactionsPageState extends State<TransactionsPage> {
       setState(() {
         isLoading = true;
       });
-      await Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          isLoading = false;
-          i++;
-          transactions.add({
-            'title': 'Street greenig project' + i.toString(),
-            'originator': 'Cybdom Tech',
-            'transaction_number': '98217302193491',
-            'type': 'Public',
-            'status': 'Pairing',
-          });
-        });
+      final txnList = await getAccountState(this.store);
+      setState(() {
+        this.txns = txnList;
       });
     }
   }
@@ -165,17 +181,14 @@ class TransactionsPageState extends State<TransactionsPage> {
   }
 
   Future<Null> _handleRefresh() async {
-    await Future.delayed(Duration(seconds: 2), () {
+    if (!isLoading) {
       setState(() {
-        i++;
-        transactions.insert(0, {
-          'title': 'Street greenig project' + i.toString(),
-          'originator': 'Cybdom Tech',
-          'transaction_number': '98217302193491',
-          'type': 'Public',
-          'status': 'Pairing',
-        });
+        isLoading = true;
       });
-    });
+      final txnList = await getAccountState(this.store);
+      setState(() {
+        this.txns = txnList;
+      });
+    }
   }
 }

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:starcoin_wallet/wallet/wallet_client.dart';
 import 'package:stcerwallet/pages/transactions/transaction_detail.dart';
 import 'package:stcerwallet/style/styles.dart';
 
@@ -7,18 +8,19 @@ Color darkBlue = Color(0xff071d40);
 Color lightBlue = Color(0xff1b4dff);
 
 class TransactionItem extends StatelessWidget {
-  final Map<String, String> transaction;
+  final TransactionWithInfo transactionWithInfo;
 
   const TransactionItem({
     Key key,
-    this.transaction,
+    this.transactionWithInfo,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return new InkWell(
         onTap: () {
-          Navigator.pushNamed(context,TransactionDetailPage.routeName);
+          Navigator.push(context,MaterialPageRoute(
+              builder: (context) => TransactionDetailPage(title: "TransactionDetail",transactionWithInfo: transactionWithInfo)));
         },
         child: Column(
       children: <Widget>[
@@ -26,7 +28,7 @@ class TransactionItem extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Text(
-                "${transaction['title']}",
+                "new txn ",
                 style: Theme.of(context)
                     .textTheme
                     .subhead
@@ -38,8 +40,8 @@ class TransactionItem extends StatelessWidget {
         SizedBox(height: 11),
         Row(
           children: <Widget>[
-            Text("Originator: "),
-            Text("${transaction['originator']}")
+            Text("Sender: "),
+            Text("${transactionWithInfo.txn['UserTransaction']['authenticator']['Ed25519']['public_key']}")
           ],
         ),
         SizedBox(height: 5),
@@ -51,7 +53,7 @@ class TransactionItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                   Text("Transaction Number: "),
-                  Text("${transaction['transaction_number']}")
+                  Text("${transactionWithInfo.txn['UserTransaction']['raw_txn']['sequence_number']}")
                 ])),
             new Padding(
               padding: EdgeInsets.only(right: Dimens.padding),
@@ -64,7 +66,15 @@ class TransactionItem extends StatelessWidget {
         ),
         SizedBox(height: 5),
         Row(
-          children: <Widget>[Text("Type: "), Text("${transaction['type']}")],
+          children: <Widget>[Text("Type: "), Text((() {
+            if(transactionWithInfo.paymentType==PaymentType.Send){
+              return "Send";}
+            return "Recieve";
+          })())],
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: <Widget>[Text("Status: "), Text("${transactionWithInfo.txnInfo['status']}")],
         ),
         Divider(
           height: 21,

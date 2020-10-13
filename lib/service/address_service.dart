@@ -4,7 +4,7 @@ import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:starcoin_wallet/wallet/helper.dart';
 import 'package:starcoin_wallet/wallet/keypair.dart';
-import 'package:starcoin_wallet/wallet/wallet.dart';
+import 'package:starcoin_wallet/wallet/account_manager.dart';
 
 abstract class IAddressService {
   String generateMnemonic();

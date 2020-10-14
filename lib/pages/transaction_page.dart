@@ -156,7 +156,8 @@ class TransactionsPageState extends State<TransactionsPage> {
 
   Future<List<TransactionWithInfo>> getAccountState(WalletHandler store) async {
     final walletClient = new WalletClient(BASEURL);
-    final txnList = await walletClient.getTxnList(store.state.account,
+    final batchClient = new BatchClient(WSURL);
+    final txnList = await batchClient.getTxnListBatch(walletClient,store.state.account,
         Optional.of(0), Optional.empty(), Optional.empty());
     return txnList;
   }

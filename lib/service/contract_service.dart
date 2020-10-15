@@ -96,10 +96,6 @@ class ContractService implements IContractService {
       final to = decoded[1] as EthereumAddress;
       final value = decoded[2] as BigInt;
 
-      print('$from}');
-      print('$to}');
-      print('$value}');
-
       onTransfer(from, to, value);
     });
   }

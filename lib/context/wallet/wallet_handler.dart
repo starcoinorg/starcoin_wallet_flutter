@@ -66,8 +66,6 @@ class WalletHandler {
         return;
       }
 
-      print('======= balance updated =======');
-
       await fetchOwnBalance();
     });
   }

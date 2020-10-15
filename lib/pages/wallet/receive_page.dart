@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:starcoin_wallet/wallet/helper.dart';
 
 class ReceivePage extends StatelessWidget {
 
+  final String address;
+
   final String publicKey;
 
-  ReceivePage.name(this.publicKey);
+  final String _avatar;
+
+  ReceivePage.name(this.address,this.publicKey, this._avatar);
 
   @override
   Widget build(BuildContext context) {
     //final ThemeData theme = Theme.of(context);
-    final address=Helpers.publicKeyIntoAddressHex(publicKey);
 
+    final addressWithKey = publicKey+address;
     return new Scaffold(
       appBar: _appBar(context),
       body: Center(
@@ -23,7 +26,7 @@ class ReceivePage extends StatelessWidget {
               data: publicKey ?? "",
               size: 150.0,
             ),
-            SelectableText("Address is :0x"+address ?? "",),
+            SelectableText("Address is :"+address ?? "",),
             SelectableText("Public Key is :"+publicKey ?? ""),
           ],
         ),

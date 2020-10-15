@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:starcoin_wallet/wallet/wallet_client.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
-import 'package:stcerwallet/pages/wallet/receive_page.dart';
 
 class TransactionDetailPage extends StatelessWidget {
   static const String routeName = Routes.wallet + '/transaction_detail';
@@ -94,7 +93,7 @@ class TransactionDetailPage extends StatelessWidget {
               SizedBox(height: 5),
               Row(
                 children: <Widget>[
-                  Text("Sender Address : 0x"),
+                  Text("Sender Address : "),
                   Text(
                       "${transactionWithInfo.txn['UserTransaction']['raw_txn']['sender']}")
                 ],
@@ -102,16 +101,9 @@ class TransactionDetailPage extends StatelessWidget {
               SizedBox(height: 5),
               Row(
                 children: <Widget>[
-                  Text("Sender Public Key: 0x"),
-                  new InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-                          return ReceivePage.name("0x"+transactionWithInfo.txn['UserTransaction']['authenticator']['Ed25519']['public_key'],);
-                        }));
-                      },
-                  child:Text(
+                  Text("Sender Public Key: "),
+                  Text(
                       "${transactionWithInfo.txn['UserTransaction']['authenticator']['Ed25519']['public_key']}")
-                  )
                 ],
               ),
             ],

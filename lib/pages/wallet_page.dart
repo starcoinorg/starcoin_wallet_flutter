@@ -145,7 +145,8 @@ class WalletPage extends HookWidget {
               width: iconSize, height: iconSize),
           onPressed: () {
             Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-              return ReceivePage.name(state.publicKey,);
+              return ReceivePage.name(state.address, state.publicKey,
+                  'assets/images/ic_default_wallet_avatar_4.png');
             }));
           }),
       actions: <Widget>[

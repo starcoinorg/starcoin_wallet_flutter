@@ -3,6 +3,7 @@ import 'package:stcerwallet/service/address_service.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/service/contract_service.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:stcerwallet/service/watch_event_service.dart';
 import 'dart:developer';
 
 import 'wallet_state.dart';
@@ -13,12 +14,14 @@ class WalletHandler {
     this._addressService,
     this._contractService,
     this._configurationService,
+      this._watchEventService,
   );
 
   final Store<Wallet, WalletAction> _store;
   final AddressService _addressService;
   final ConfigurationService _configurationService;
   final ContractService _contractService;
+  final WatchEventService _watchEventService;
 
   Wallet get state => _store.state;
 
@@ -58,14 +61,8 @@ class WalletHandler {
   Future<void> _initialise() async {
     await this.fetchOwnBalance();
 
-    _contractService.listenTransfer((from, to, value) async {
-      var fromMe = from.toString() == state.address;
-      var toMe = to.toString() == state.address;
-
-      if (!fromMe && !toMe) {
-        return;
-      }
-
+    _watchEventService.listenTransfer(state.account,() async {
+      log("new txn event");
       await fetchOwnBalance();
     });
   }

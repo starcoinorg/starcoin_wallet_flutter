@@ -14,7 +14,7 @@ class WalletHandler {
     this._addressService,
     this._contractService,
     this._configurationService,
-      this._watchEventService,
+    this._watchEventService,
   );
 
   final Store<Wallet, WalletAction> _store;
@@ -26,15 +26,15 @@ class WalletHandler {
   Wallet get state => _store.state;
 
   Future<void> initialise() async {
-    final entropyMnemonic = _configurationService.getMnemonic();
-    final privateKey = _configurationService.getPrivateKey();
+      final entropyMnemonic = _configurationService.getMnemonic();
+      final privateKey = _configurationService.getPrivateKey();
 
-    if (entropyMnemonic != null && entropyMnemonic.isNotEmpty) {
-      _initialiseFromMnemonic(entropyMnemonic);
-      return;
-    }
+      if (entropyMnemonic != null && entropyMnemonic.isNotEmpty) {
+        _initialiseFromMnemonic(entropyMnemonic);
+        return;
+      }
 
-    _initialiseFromPrivateKey(privateKey);
+      _initialiseFromPrivateKey(privateKey);
   }
 
   Future<void> _initialiseFromMnemonic(String entropyMnemonic) async {
@@ -42,10 +42,11 @@ class WalletHandler {
     final privateKey = _addressService.getPrivateKey(entropyMnemonic);
     final address = await _addressService.getPublicAddress(privateKey);
 
-    log("public key is "+address.keyPair.getPublicKeyHex());
-    log("address is "+address.getAddress());
+    log("public key is " + address.keyPair.getPublicKeyHex());
+    log("address is " + address.getAddress());
     log("private key is $privateKey");
-    _store.dispatch(InitialiseWallet(address.getAddress(), privateKey,address,address.keyPair.getPublicKeyHex()));
+    _store.dispatch(InitialiseWallet(address.getAddress(), privateKey, address,
+        address.keyPair.getPublicKeyHex()));
 
     await _initialise();
   }
@@ -53,7 +54,8 @@ class WalletHandler {
   Future<void> _initialiseFromPrivateKey(String privateKey) async {
     final address = await _addressService.getPublicAddress(privateKey);
 
-    _store.dispatch(InitialiseWallet(address.getAddress(), privateKey,address,address.keyPair.getPublicKeyHex()));
+    _store.dispatch(InitialiseWallet(address.getAddress(), privateKey, address,
+        address.keyPair.getPublicKeyHex()));
 
     await _initialise();
   }
@@ -61,7 +63,7 @@ class WalletHandler {
   Future<void> _initialise() async {
     await this.fetchOwnBalance();
 
-    _watchEventService.listenTransfer(state.account,() async {
+    _watchEventService.listenTransfer(state.account, () async {
       log("new txn event");
       await fetchOwnBalance();
     });
@@ -75,7 +77,7 @@ class WalletHandler {
     var stcBalance = await state.account.balanceOfStc();
 
     // TODO
-    var balance=BigInt.from(stcBalance.low);
+    var balance = BigInt.from(stcBalance.low);
     log("balance is $balance");
     _store.dispatch(BalanceUpdated(balance, tokenBalance));
   }

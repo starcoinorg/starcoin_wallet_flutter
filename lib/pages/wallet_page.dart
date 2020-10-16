@@ -25,6 +25,7 @@ class WalletPage extends HookWidget {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
+
   final List<Assets> _assets = [
     Assets(),
     Assets(),

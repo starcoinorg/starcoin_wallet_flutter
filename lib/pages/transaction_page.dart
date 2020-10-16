@@ -92,7 +92,6 @@ class TransactionsPageState extends State<TransactionsPage> {
     setState(() {
       if (needInit) {
         store = useWallet(context);
-        store.initialise();
       }
       needInit = false;
       return null;

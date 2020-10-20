@@ -25,6 +25,7 @@ class WalletPage extends HookWidget {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
+  static bool inited = false;
 
   final List<Assets> _assets = [
     Assets(),
@@ -38,7 +39,10 @@ class WalletPage extends HookWidget {
     final store = useWallet(context);
 
     useEffect(() {
-      store.initialise();
+      if (inited == false) {
+        store.initialise();
+        inited = true;
+      }
       return null;
     }, []);
 
@@ -63,17 +67,6 @@ class WalletPage extends HookWidget {
             ));
           }
         });
-
-//     return Scaffold(
-//       key: _scaffoldKey,
-//       backgroundColor: Colors.white,
-//       appBar: _appBar(context),
-//       body: new RefreshIndicator(
-// //          color: theme.accentColor,
-//           key: _refreshIndicatorKey,
-//           child: ListView(children: _body(context,store)),
-//           onRefresh: _handleRefresh),
-//     );
   }
 
   Future<Null> _handleRefresh() async {

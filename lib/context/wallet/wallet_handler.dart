@@ -26,25 +26,25 @@ class WalletHandler {
   Wallet get state => _store.state;
 
   Future<void> initialise() async {
-      final entropyMnemonic = _configurationService.getMnemonic();
-      final privateKey = _configurationService.getPrivateKey();
+    final entropyMnemonic = _configurationService.getEntropyMnemonic();
+    final privateKey = _configurationService.getPrivateKey();
 
-      if (entropyMnemonic != null && entropyMnemonic.isNotEmpty) {
-        _initialiseFromMnemonic(entropyMnemonic);
-        return;
-      }
+    if (entropyMnemonic != null && entropyMnemonic.isNotEmpty) {
+      _initialiseFromMnemonic(entropyMnemonic);
+      return;
+    }
 
-      _initialiseFromPrivateKey(privateKey);
+    _initialiseFromPrivateKey(privateKey);
   }
 
   Future<void> _initialiseFromMnemonic(String entropyMnemonic) async {
-    //final mnemonic = _addressService.entropyToMnemonic(entropyMnemonic);
-    final privateKey = _addressService.getPrivateKey(entropyMnemonic);
+    log(entropyMnemonic);
+    final mnemonic = _addressService.entropyToMnemonic(entropyMnemonic);
+    final privateKey = _addressService.getPrivateKey(mnemonic);
     final address = await _addressService.getPublicAddress(privateKey);
 
     log("public key is " + address.keyPair.getPublicKeyHex());
     log("address is " + address.getAddress());
-    log("private key is $privateKey");
     _store.dispatch(InitialiseWallet(address.getAddress(), privateKey, address,
         address.keyPair.getPublicKeyHex()));
 
@@ -78,7 +78,6 @@ class WalletHandler {
 
     // TODO
     var balance = BigInt.from(stcBalance.low);
-    log("balance is $balance");
     _store.dispatch(BalanceUpdated(balance, tokenBalance));
   }
 

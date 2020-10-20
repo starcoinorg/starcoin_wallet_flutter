@@ -2,11 +2,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class IConfigurationService {
   Future<void> setMnemonic(String value);
+  Future<void> setEntropyMnemonic(String value);
   Future<void> setupDone(bool value);
   Future<void> setPrivateKey(String value);
   String getMnemonic();
   String getPrivateKey();
   bool didSetupWallet();
+  String getEntropyMnemonic();
 }
 
 class ConfigurationService implements IConfigurationService {
@@ -42,5 +44,15 @@ class ConfigurationService implements IConfigurationService {
   @override
   bool didSetupWallet() {
     return _preferences.getBool("didSetupWallet") ?? false;
+  }
+
+  @override
+  Future<void> setEntropyMnemonic(String value) async {
+    await _preferences.setString("entropyMnemonic", value);
+  }
+
+  @override
+  String getEntropyMnemonic() {
+    return _preferences.getString("entropyMnemonic");
   }
 }

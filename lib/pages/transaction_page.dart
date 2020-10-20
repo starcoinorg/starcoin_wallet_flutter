@@ -8,58 +8,6 @@ import 'package:starcoin_wallet/wallet/wallet_client.dart';
 import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:optional/optional.dart';
 
-List<Map<String, String>> transactions = [
-  {
-    'title': 'Street greenig project',
-    'originator': 'Cybdom Tech',
-    'transaction_number': '98217302193491',
-    'type': 'Public',
-    'status': 'Pairing',
-  },
-  {
-    'title': 'Street greenig project',
-    'originator': 'Cybdom Tech',
-    'transaction_number': '98217302193491',
-    'type': 'Public',
-    'status': 'Pairing',
-  },
-  {
-    'title': 'Street greenig project',
-    'originator': 'Cybdom Tech',
-    'transaction_number': '98217302193491',
-    'type': 'Public',
-    'status': 'Pairing',
-  },
-  {
-    'title': 'Street greenig project',
-    'originator': 'Cybdom Tech',
-    'transaction_number': '98217302193491',
-    'type': 'Public',
-    'status': 'Pairing',
-  },
-  {
-    'title': 'Street greenig project',
-    'originator': 'Cybdom Tech',
-    'transaction_number': '98217302193491',
-    'type': 'Public',
-    'status': 'Pairing',
-  },
-  {
-    'title': 'Street greenig project',
-    'originator': 'Cybdom Tech',
-    'transaction_number': '98217302193491',
-    'type': 'Public',
-    'status': 'Pairing',
-  },
-  {
-    'title': 'Street greenig project',
-    'originator': 'Cybdom Tech',
-    'transaction_number': '98217302193491',
-    'type': 'Public',
-    'status': 'Pairing',
-  },
-];
-
 var i = 0;
 
 class TransactionsPage extends StatefulWidget {
@@ -156,8 +104,12 @@ class TransactionsPageState extends State<TransactionsPage> {
   Future<List<TransactionWithInfo>> getAccountState(WalletHandler store) async {
     final walletClient = new WalletClient(BASEURL);
     final batchClient = new BatchClient(WSURL);
-    final txnList = await batchClient.getTxnListBatch(walletClient,store.state.account,
-        Optional.of(0), Optional.empty(), Optional.empty());
+    final txnList = await batchClient.getTxnListBatch(
+        walletClient,
+        store.state.account,
+        Optional.of(0),
+        Optional.empty(),
+        Optional.empty());
     return txnList;
   }
 

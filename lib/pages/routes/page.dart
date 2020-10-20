@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:stcerwallet/context/setup/wallet_setup_provider.dart';
 import 'package:stcerwallet/context/transfer/wallet_transfer_provider.dart';
-import 'package:stcerwallet/pages/market_page.dart';
 import 'package:stcerwallet/pages/profile/about_page.dart';
-import 'package:stcerwallet/pages/profile/settings_page.dart';
 import 'package:stcerwallet/pages/profile_page.dart';
 import 'package:stcerwallet/pages/transactions/transaction_detail.dart';
 import 'package:stcerwallet/pages/wallet/init/identity_init_page.dart';
@@ -45,27 +43,21 @@ final List<Page> kAllPages = _buildPages();
 List<Page> _buildPages() {
   final List<Page> pages = <Page>[
     new Page(
-        routeName: MarketPage.routeName,
-        buildRoute: (BuildContext context) => new MarketPage()),
-    new Page(
         routeName: WalletPage.routeName,
         buildRoute: (BuildContext context) => new WalletPage()),
     new Page(
         routeName: ProfilePage.routeName,
         buildRoute: (BuildContext context) => new ProfilePage()),
     new Page(
-        routeName: SettingsPage.routeName,
-        buildRoute: (BuildContext context) => new SettingsPage()),
-    new Page(
         routeName: WalletManagePage.routeName,
         buildRoute: (BuildContext context) => new WalletManagePage()),
     new Page(
         routeName: WalletImportPage.routeName,
         buildRoute: (BuildContext context) => WalletSetupProvider(
-          builder: (context, store) {
-            return WalletImportPage("Import wallet");
-          },
-        )),
+              builder: (context, store) {
+                return WalletImportPage("Import wallet");
+              },
+            )),
     new Page(
         routeName: IdentityInitPage.routeName,
         buildRoute: (BuildContext context) => new IdentityInitPage()),
@@ -93,13 +85,13 @@ List<Page> _buildPages() {
         routeName: TransactionDetailPage.routeName,
         buildRoute: (BuildContext context) => new TransactionDetailPage()),
   ];
-  if(Platform.isIOS||Platform.isAndroid){
+  if (Platform.isIOS || Platform.isAndroid) {
     pages.add(new Page(
         routeName: QRCodeReaderPage.routeName,
         buildRoute: (BuildContext context) => new QRCodeReaderPage(
-          title: "Scan QRCode",
-          onScanned: ModalRoute.of(context).settings.arguments,
-        )));
+              title: "Scan QRCode",
+              onScanned: ModalRoute.of(context).settings.arguments,
+            )));
   }
   return pages;
 }

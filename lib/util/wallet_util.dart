@@ -1,5 +1,5 @@
-const BASEURL = "http://192.168.31.17:9850";
-const WSURL = "ws://192.168.31.17:9870";
+const BASEURL = "http://localhost:9850";
+const WSURL = "ws://localhost:9870";
 
 class WalletUtil {
   static String getShortAddress(String address) {

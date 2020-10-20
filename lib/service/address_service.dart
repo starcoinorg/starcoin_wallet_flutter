@@ -25,39 +25,44 @@ class AddressService implements IAddressService {
   }
 
   String entropyToMnemonic(String entropyMnemonic) {
-    return entropyMnemonic;
-    //return bip39.entropyToMnemonic(entropyMnemonic);
+    return bip39.entropyToMnemonic(entropyMnemonic);
   }
 
   @override
   String getPrivateKey(String mnemonic) {
-    Wallet wallet = new Wallet(mnemonic: mnemonic,url: BASEURL, salt: 'STARCOIN');
+    Wallet wallet =
+        new Wallet(mnemonic: mnemonic, url: BASEURL, salt: 'STARCOIN');
     Account account = wallet.generateAccount(0);
     return Helpers.byteToHex(account.keyPair.getPrivateKey());
   }
 
   @override
   Future<Account> getPublicAddress(String privateKey) async {
-
     final private = Helpers.hexToBytes(privateKey);
     final keypair = KeyPair(private);
-    final account = Account(keypair,BASEURL);
+    final account = Account(keypair, BASEURL);
     return account;
   }
 
   @override
   Future<bool> setupFromMnemonic(String mnemonic) async {
-    Wallet wallet = new Wallet(mnemonic: mnemonic, url: BASEURL,salt: 'STARCOIN');
+    final cryptMnemonic = bip39.mnemonicToEntropy(mnemonic);
+
+    Wallet wallet =
+        new Wallet(mnemonic: cryptMnemonic, url: BASEURL, salt: 'STARCOIN');
     Account account = wallet.generateAccount(0);
 
     await _configService.setMnemonic(mnemonic);
-    await _configService.setPrivateKey(Helpers.byteToHex(account.keyPair.getPrivateKey()));
+    await _configService.setEntropyMnemonic(cryptMnemonic);
+    await _configService
+        .setPrivateKey(Helpers.byteToHex(account.keyPair.getPrivateKey()));
     await _configService.setupDone(true);
     return true;
   }
 
   @override
   Future<bool> setupFromPrivateKey(String privateKey) async {
+    await _configService.setMnemonic(null);
     await _configService.setMnemonic(null);
     await _configService.setPrivateKey(privateKey);
     await _configService.setupDone(true);

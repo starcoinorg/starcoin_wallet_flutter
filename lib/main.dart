@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stcerwallet/config/states.dart';
-import 'package:stcerwallet/pages/dialogs.dart';
 import 'package:stcerwallet/service/services_provider.dart';
 import 'package:stcerwallet/style/themes.dart';
 import 'package:stcerwallet/pages/main_page.dart';
@@ -16,8 +15,7 @@ void main() async {
   final providers = await createProviders(AppConfig().params["ropsten"]);
 
   Store<AppState> store = new Store(appReducer,
-      initialState: new AppState(
-          theme: kLightTheme, loadingVisible: false));
+      initialState: new AppState(theme: kLightTheme, loadingVisible: false));
   runApp(new App(store: store, providers: providers));
 }
 

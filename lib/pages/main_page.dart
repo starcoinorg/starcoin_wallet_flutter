@@ -9,7 +9,6 @@ import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/view/navigation_icon_view.dart';
 
 import 'intro_page.dart';
-import 'dart:developer';
 
 class MainPage extends StatefulWidget {
   static const String routeName = Routes.main + "/index";
@@ -37,7 +36,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         vsync: this,
       ),
       new NavigationIconView(
-        icon: const Icon(Icons.trending_up),
+        icon: const Icon(Icons.list_alt),
         title: 'Transactions',
         vsync: this,
       ),
@@ -53,7 +52,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    log("aaaa");
     final BottomNavigationBar botNavBar = new BottomNavigationBar(
       items: _navigationViews
           .map((NavigationIconView navigationView) => navigationView.item)
@@ -88,7 +86,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void onPageChanged(int index) {
-    this._currentIndex = index;
+    setState(() {
+      this._currentIndex = index;
+    });
   }
 
   // 释放此对象使用的资源

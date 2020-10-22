@@ -70,7 +70,7 @@ class TransactionsPageState extends State<TransactionsPage> {
                     ),
                   ),
                   body: Container(
-                      padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                      padding: EdgeInsets.only(left: 20.0, right: 20.0),
                       child: NotificationListener<ScrollNotification>(
                           onNotification:
                               (ScrollNotification scrollNotification) {
@@ -81,13 +81,18 @@ class TransactionsPageState extends State<TransactionsPage> {
                             return false;
                           },
                           child: RefreshIndicator(
-                            child: ListView.builder(
-                              itemCount: this.txns.length,
-                              itemBuilder: (ctx, i) {
-                                return TransactionItem(
-                                    transactionWithInfo: this.txns[i]);
-                              },
-                            ),
+                            child: ListView.separated(
+                                itemCount: this.txns.length,
+                                itemBuilder: (ctx, i) {
+                                  return TransactionItem(
+                                      transactionWithInfo: this.txns[i]);
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return new Divider(
+                                    height: 1.0,
+                                  );
+                                }),
                             onRefresh: _handleRefresh,
                           )))),
             );

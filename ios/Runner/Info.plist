@@ -43,5 +43,18 @@
 	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>Shall we have access to your camera?</string>
+
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>wallet.starcoin.org</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>stc</string>
+			</array>
+		</dict>
+	</array>
+		
 </dict>
 </plist>

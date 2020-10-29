@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.clempe.etherwallet">
+    package="dev.clempe.starcoin_wallet_flutter">
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET"/>
     
@@ -33,6 +33,17 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="stc"
+                    android:host="wallet.starcoin.org" />
+            </intent-filter>
+            <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
         </activity>
           <meta-data
           android:name="com.google.firebase.ml.vision.DEPENDENCIES"

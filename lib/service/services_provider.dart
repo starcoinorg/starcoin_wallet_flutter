@@ -5,6 +5,7 @@ import 'package:stcerwallet/service/address_service.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/service/contract_service.dart';
 import 'package:stcerwallet/service/watch_event_service.dart';
+import 'package:stcerwallet/service/deep_link_service.dart';
 import 'package:stcerwallet/util/contract_parser.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
@@ -18,9 +19,10 @@ class Services {
   final AddressService addressService;
   final ConfigurationService configurationService;
   final WatchEventService watchEventService;
+  final DeepLinkBloc deepLinkBloc;
 
   Services(this.contractService, this.addressService, this.configurationService,
-      this.watchEventService);
+      this.watchEventService, this.deepLinkBloc);
 }
 
 Future<List<SingleChildCloneableWidget>> createProviders(
@@ -43,11 +45,13 @@ Future<List<SingleChildCloneableWidget>> createProviders(
   final pubSubClient = PubSubClient(socket.cast<String>(), rpc);
 
   final watchEventService = WatchEventService(pubSubClient);
+  final bloc = DeepLinkBloc();
 
   return [
     Provider.value(value: addressService),
     Provider.value(value: contractService),
     Provider.value(value: configurationService),
     Provider.value(value: watchEventService),
+    Provider.value(value: bloc),
   ];
 }

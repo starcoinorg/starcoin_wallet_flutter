@@ -3,6 +3,7 @@ import 'package:stcerwallet/service/address_service.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/service/contract_service.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:stcerwallet/service/deep_link_service.dart';
 import 'package:stcerwallet/service/watch_event_service.dart';
 import 'dart:developer';
 
@@ -15,6 +16,7 @@ class WalletHandler {
     this._contractService,
     this._configurationService,
     this._watchEventService,
+    this._bloc,
   );
 
   final Store<Wallet, WalletAction> _store;
@@ -22,6 +24,7 @@ class WalletHandler {
   final ConfigurationService _configurationService;
   final ContractService _contractService;
   final WatchEventService _watchEventService;
+  final DeepLinkBloc _bloc;
 
   Wallet get state => _store.state;
 
@@ -48,6 +51,7 @@ class WalletHandler {
     _store.dispatch(InitialiseWallet(address.getAddress(), privateKey, address,
         address.keyPair.getPublicKeyHex()));
 
+    await _initialiseRedirect();
     await _initialise();
   }
 
@@ -57,6 +61,7 @@ class WalletHandler {
     _store.dispatch(InitialiseWallet(address.getAddress(), privateKey, address,
         address.keyPair.getPublicKeyHex()));
 
+    await _initialiseRedirect();
     await _initialise();
   }
 
@@ -66,6 +71,12 @@ class WalletHandler {
     _watchEventService.listenTransfer(state.account, () async {
       log("new txn event");
       await fetchOwnBalance();
+    });
+  }
+
+  Future<void> _initialiseRedirect() async {
+    _bloc.listen((String url) {
+      log("url is $url");
     });
   }
 

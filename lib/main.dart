@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stcerwallet/config/states.dart';
+import 'package:stcerwallet/service/navigator_observer.dart';
 import 'package:stcerwallet/service/services_provider.dart';
 import 'package:stcerwallet/style/themes.dart';
 import 'package:stcerwallet/pages/main_page.dart';
@@ -44,6 +45,7 @@ class App extends StatelessWidget {
                     theme: store.state.theme.themeData,
                     routes: _buildRoutes(),
                     home: new MainPage(),
+                    navigatorObservers: [CustomNavigatorObserver.getInstance()],
                   ),
                 ],
               );

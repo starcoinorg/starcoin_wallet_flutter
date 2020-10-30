@@ -54,6 +54,8 @@ class AddressService implements IAddressService {
 
     await _configService.setMnemonic(mnemonic);
     await _configService.setEntropyMnemonic(cryptMnemonic);
+    print(
+        "private key is " + Helpers.byteToHex(account.keyPair.getPrivateKey()));
     await _configService
         .setPrivateKey(Helpers.byteToHex(account.keyPair.getPrivateKey()));
     await _configService.setupDone(true);
@@ -63,7 +65,7 @@ class AddressService implements IAddressService {
   @override
   Future<bool> setupFromPrivateKey(String privateKey) async {
     await _configService.setMnemonic(null);
-    await _configService.setMnemonic(null);
+    await _configService.setEntropyMnemonic(null);
     await _configService.setPrivateKey(privateKey);
     await _configService.setupDone(true);
     return true;

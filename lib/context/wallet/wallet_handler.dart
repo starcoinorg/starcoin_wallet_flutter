@@ -1,13 +1,17 @@
+import 'package:starcoin_wallet/wallet/helper.dart';
 import 'package:stcerwallet/model/wallet.dart';
+import 'package:stcerwallet/pages/wallet/wallet_transaction_payload.dart';
 import 'package:stcerwallet/service/address_service.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/service/contract_service.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:stcerwallet/service/deep_link_service.dart';
+import 'package:stcerwallet/service/navigator_observer.dart';
 import 'package:stcerwallet/service/watch_event_service.dart';
 import 'dart:developer';
 
 import 'wallet_state.dart';
+import 'package:flutter/material.dart';
 
 class WalletHandler {
   WalletHandler(
@@ -25,6 +29,8 @@ class WalletHandler {
   final ContractService _contractService;
   final WatchEventService _watchEventService;
   final DeepLinkBloc _bloc;
+  final GlobalKey<NavigatorState> navigatorKey =
+      new GlobalKey<NavigatorState>();
 
   Wallet get state => _store.state;
 
@@ -42,12 +48,14 @@ class WalletHandler {
 
   Future<void> _initialiseFromMnemonic(String entropyMnemonic) async {
     log(entropyMnemonic);
-    final mnemonic = _addressService.entropyToMnemonic(entropyMnemonic);
-    final privateKey = _addressService.getPrivateKey(mnemonic);
+    //final mnemonic = _addressService.entropyToMnemonic(entropyMnemonic);
+    final privateKey = _addressService.getPrivateKey(entropyMnemonic);
     final address = await _addressService.getPublicAddress(privateKey);
 
     log("public key is " + address.keyPair.getPublicKeyHex());
+    log("private key is " + Helpers.byteToHex(address.keyPair.getPrivateKey()));
     log("address is " + address.getAddress());
+
     _store.dispatch(InitialiseWallet(address.getAddress(), privateKey, address,
         address.keyPair.getPublicKeyHex()));
 
@@ -77,6 +85,15 @@ class WalletHandler {
   Future<void> _initialiseRedirect() async {
     _bloc.listen((String url) {
       log("url is $url");
+      final tokens = url.split("/");
+      if (tokens.length == 0) {
+        return;
+      }
+      final payloadHex = tokens[tokens.length - 1];
+      final privateKey = _configurationService.getPrivateKey();
+      CustomNavigatorObserver.getInstance().navigator.push(MaterialPageRoute(
+          builder: (BuildContext context) => WalletTransactionPayloadPage(
+              payloadHex: payloadHex, privateKeyString: privateKey)));
     });
   }
 

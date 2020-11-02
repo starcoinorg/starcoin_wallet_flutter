@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 //import 'dart:math';
 
@@ -12,6 +11,7 @@ import 'package:starcoin_wallet/serde/serde.dart';
 import 'package:starcoin_wallet/starcoin/starcoin.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:starcoin_wallet/wallet/helper.dart';
+import 'package:starcoin_wallet/wallet/keypair.dart';
 
 class WalletTransferHandler {
   WalletTransferHandler(
@@ -37,7 +37,7 @@ class WalletTransferHandler {
       await account.transferSTC(
           Int128(0, int.parse(amount)),
           AccountAddress(Helpers.hexToBytes(to)),
-          Bytes(Helpers.hexToBytes(publicKey)));
+          Bytes(getAuthKey(Helpers.hexToBytes(publicKey))));
       completer.complete(true);
       // await _contractService.send(
       //   privateKey,
@@ -52,7 +52,7 @@ class WalletTransferHandler {
       //   },
       // );
     } catch (ex) {
-      log(ex);
+      log(ex.toString());
       _store.dispatch(WalletTransferError(ex.toString()));
       completer.complete(false);
     }

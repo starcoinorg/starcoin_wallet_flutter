@@ -77,10 +77,11 @@ class TransactionItem extends StatelessWidget {
                   children: <Widget>[
                     Text("Type: "),
                     Text((() {
-                      if (transactionWithInfo.paymentType == PaymentType.Send) {
-                        return "Send";
+                      if (transactionWithInfo.paymentType ==
+                          EventType.WithDraw) {
+                        return "WithDraw";
                       }
-                      return "Recieve";
+                      return "Deposit";
                     })())
                   ],
                 ),

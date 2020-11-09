@@ -33,7 +33,7 @@ class WalletTransactionPayloadPage extends HookWidget {
             final payload = TransactionPayload.lcsDeserialize(payloadLcs);
             await account.sendTransaction(payload);
           } catch (ex) {
-            log(ex);
+            log(ex.toString());
           }
           Navigator.popUntil(context, ModalRoute.withName('/'));
         },

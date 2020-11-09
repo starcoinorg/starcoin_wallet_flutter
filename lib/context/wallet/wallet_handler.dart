@@ -84,7 +84,6 @@ class WalletHandler {
 
   Future<void> _initialiseRedirect() async {
     _bloc.listen((String url) {
-      log("url is $url");
       final tokens = url.split("/");
       if (tokens.length == 0) {
         return;

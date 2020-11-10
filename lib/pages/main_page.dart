@@ -86,9 +86,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void onPageChanged(int index) {
-    setState(() {
-      this._currentIndex = index;
-    });
+    //setState(() {
+    this._currentIndex = index;
+    //});
   }
 
   // 释放此对象使用的资源

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -38,13 +39,10 @@ class WalletPage extends HookWidget {
     //final ThemeData theme = Theme.of(context);
     final store = useWallet(context);
 
-    useEffect(() {
-      if (inited == false) {
-        store.initialise();
-        inited = true;
-      }
-      return null;
-    }, []);
+    if (inited == false) {
+      store.initialise();
+      inited = true;
+    }
 
     return FutureBuilder<AccountState>(
         future: getAccountState(store),
@@ -87,15 +85,25 @@ class WalletPage extends HookWidget {
   }
 
   Future<AccountState> getAccountState(WalletHandler store) async {
-    final stcBalance = await store.state.account.balanceOfStc();
     final address = store.state.address;
     final publicKey = store.state.account.keyPair.getPublicKeyHex();
 
-    return AccountState(
-        balance: stcBalance.toBigInt(),
-        sequenceNumber: BigInt.zero,
-        address: address,
-        publicKey: "0x" + publicKey);
+    try {
+      final stcBalance = await store.state.account.balanceOfStc();
+
+      return AccountState(
+          balance: stcBalance.toBigInt(),
+          sequenceNumber: BigInt.zero,
+          address: address,
+          publicKey: "0x" + publicKey);
+    } catch (ex) {
+      log(ex.toString());
+      return AccountState(
+          balance: BigInt.zero,
+          sequenceNumber: BigInt.zero,
+          address: address,
+          publicKey: "0x" + publicKey);
+    }
   }
 
   Widget _appBar(BuildContext context, AccountState state) {

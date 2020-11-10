@@ -7,6 +7,7 @@ import 'package:stcerwallet/pages/transactions/transaction_item.dart';
 import 'package:starcoin_wallet/wallet/wallet_client.dart';
 import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:optional/optional.dart';
+import 'dart:developer';
 
 var i = 0;
 
@@ -109,13 +110,18 @@ class TransactionsPageState extends State<TransactionsPage> {
   Future<List<TransactionWithInfo>> getAccountState(WalletHandler store) async {
     final walletClient = new WalletClient(BASEURL);
     final batchClient = new BatchClient(WSURL);
-    final txnList = await batchClient.getTxnListBatch(
-        walletClient,
-        store.state.account,
-        Optional.of(0),
-        Optional.empty(),
-        Optional.empty());
-    return txnList;
+    try {
+      final txnList = await batchClient.getTxnListBatch(
+          walletClient,
+          store.state.account,
+          Optional.of(0),
+          Optional.empty(),
+          Optional.empty());
+      return txnList;
+    } catch (ex) {
+      log(ex.toString());
+      rethrow;
+    }
   }
 
   // 上拉加载

@@ -1,18 +1,16 @@
-
-
 class HDWallet {
-
   String name;
 
   String address;
 
-  String keystore;
+  String privateKey;
 
   String icon;
 
   String mnemonic;
 
-  HDWallet({this.name, this.address, this.keystore, this.icon, this.mnemonic});
+  HDWallet(
+      {this.name, this.address, this.privateKey, this.icon, this.mnemonic});
 
   @override
   int get hashCode {
@@ -21,7 +19,7 @@ class HDWallet {
 
   @override
   bool operator ==(other) {
-    if (other is HDWallet){
+    if (other is HDWallet) {
       return address.toLowerCase() == other.address.toLowerCase();
     }
     return false;
@@ -29,8 +27,6 @@ class HDWallet {
 
   @override
   String toString() {
-    return 'HDWallet{name: $name, address: $address, keystore: $keystore, icon: $icon, mnemonic: $mnemonic}';
+    return 'HDWallet{name: $name, address: $address, privateKey: $privateKey, icon: $icon, mnemonic: $mnemonic}';
   }
-
-
 }

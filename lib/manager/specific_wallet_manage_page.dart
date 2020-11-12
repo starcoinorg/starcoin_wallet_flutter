@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stcerwallet/components/wallet/export_page.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
-import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/list/list_item_widget.dart';
 
@@ -59,20 +59,34 @@ class SpecificWalletManagePage extends StatelessWidget {
         ),
         new ListItemWidget(
           iconData: Icons.import_export,
-          title: 'Export Mnemonic Phrase',
-          onTapCallback: () {},
+          title: 'Export Mnemonic',
+          onTapCallback: () {
+            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+              return new ExportPage(
+                content: wallet.mnemonic,
+                title: "Export Mnemonic",
+              );
+            }));
+          },
           bottomLineType: BottomLineType.Gap,
         ),
-        new ListItemWidget(
-          iconData: Icons.folder,
-          title: 'Export Keystore',
-          onTapCallback: () {},
-          bottomLineType: BottomLineType.Gap,
-        ),
+        // new ListItemWidget(
+        //   iconData: Icons.folder,
+        //   title: 'Export Keystore',
+        //   onTapCallback: () {},
+        //   bottomLineType: BottomLineType.Gap,
+        // ),
         new ListItemWidget(
           iconData: Icons.vpn_key,
           title: 'Export Private Key',
-          onTapCallback: () {},
+          onTapCallback: () {
+            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+              return new ExportPage(
+                content: "0x" + wallet.privateKey,
+                title: "Export Private Key",
+              );
+            }));
+          },
           bottomLineType: BottomLineType.None,
         ),
       ],
@@ -87,21 +101,30 @@ class SpecificWalletManagePage extends StatelessWidget {
         onTap: () {},
         child: new Row(
           children: <Widget>[
-            new Padding(padding: EdgeInsets.only(left: Dimens.padding),child: new Image.asset(
-              'assets/images/ic_default_wallet_avatar_7.png',
-              width: 48.0,
-              height: 48.0,
-            ),),
+            new Padding(
+              padding: EdgeInsets.only(left: Dimens.padding),
+              child: new Image.asset(
+                'assets/images/ic_default_wallet_avatar_7.png',
+                width: 48.0,
+                height: 48.0,
+              ),
+            ),
             new Expanded(
                 child: new Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                new Text('ETH-Wallet'),
-                new Text('0x...ejsldfjldjlsfj')
+                new Text('STC-Wallet'),
+                new Text(wallet.address)
               ],
             )),
-            new Padding(padding: EdgeInsets.only(right: Dimens.padding),child: new Icon(Icons.keyboard_arrow_right,size: Dimens.itemIconSize,),)
+            // new Padding(
+            //   padding: EdgeInsets.only(right: Dimens.padding),
+            //   child: new Icon(
+            //     Icons.keyboard_arrow_right,
+            //     size: Dimens.itemIconSize,
+            //   ),
+            // )
           ],
         ),
       ),

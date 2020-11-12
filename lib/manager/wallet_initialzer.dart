@@ -59,12 +59,12 @@ class WalletInitializer {
 //    String keystore = await _wallet2Json(wallet);
 //    print(keystore);
 //
-    String avatar = 'assets/images/ic_default_wallet_avatar_${random.nextInt(
-        10)}';
+    String avatar =
+        'assets/images/ic_default_wallet_avatar_${random.nextInt(10)}';
     return HDWallet(
         name: name ?? 'identify_name',
         address: "",
-        keystore: "",
+        privateKey: "",
         icon: avatar,
         mnemonic: mnemonic);
   }
@@ -75,7 +75,6 @@ class WalletInitializer {
 //    }).then((m) async{
 //      return await new SeedCalculator().calculateSeed(m, "");
 //    });
-
 
     return new Future(() async {
       var calculator = new SeedCalculator();

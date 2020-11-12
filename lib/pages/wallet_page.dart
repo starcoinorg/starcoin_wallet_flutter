@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:provider/provider.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:stcerwallet/context/wallet/wallet_handler.dart';
 import 'package:stcerwallet/context/wallet/wallet_provider.dart';
@@ -13,6 +14,7 @@ import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/pages/wallet/receive_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_manage_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_transfer_page.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/token_item_widget.dart';
 import 'package:stcerwallet/view/wallet_widget.dart';
@@ -28,6 +30,8 @@ class WalletPage extends HookWidget {
 
   static bool inited = false;
 
+  ConfigurationService configurationService;
+
   final List<Assets> _assets = [
     Assets(),
     Assets(),
@@ -38,6 +42,7 @@ class WalletPage extends HookWidget {
   Widget build(BuildContext context) {
     //final ThemeData theme = Theme.of(context);
     final store = useWallet(context);
+    configurationService = Provider.of<ConfigurationService>(context);
 
     if (inited == false) {
       store.initialise();
@@ -60,7 +65,7 @@ class WalletPage extends HookWidget {
           } else {
             return new Center(
                 child: Text(
-              "Can't access starcoin node",
+              "Loading",
               textAlign: TextAlign.center,
             ));
           }
@@ -189,6 +194,8 @@ class WalletPage extends HookWidget {
     Widget currentWalletWidget = new WalletWidget(
       wallet: wallet,
       onMoreTap: () {
+        wallet.mnemonic = configurationService.getMnemonic();
+        wallet.privateKey = configurationService.getPrivateKey();
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
           return new SpecificWalletManagePage(
             wallet: wallet,

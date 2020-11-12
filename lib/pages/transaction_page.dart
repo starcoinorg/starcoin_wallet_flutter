@@ -100,7 +100,7 @@ class TransactionsPageState extends State<TransactionsPage> {
           } else {
             return new Center(
                 child: Text(
-              "Can't access starcoin node",
+              "Loading",
               textAlign: TextAlign.center,
             ));
           }
@@ -111,10 +111,15 @@ class TransactionsPageState extends State<TransactionsPage> {
     final walletClient = new WalletClient(BASEURL);
     final batchClient = new BatchClient(WSURL);
     try {
+      final nodeInfo = await walletClient.getNodeInfo();
+      var fromBlock = nodeInfo['peer_info']['latest_header']['number'] - 100;
+      if (fromBlock < 0) {
+        fromBlock = 0;
+      }
       final txnList = await batchClient.getTxnListBatch(
           walletClient,
           store.state.account,
-          Optional.of(0),
+          Optional.of(fromBlock),
           Optional.empty(),
           Optional.empty());
       return txnList;

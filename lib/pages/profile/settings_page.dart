@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:stcerwallet/config/states.dart';
 import 'package:stcerwallet/context/wallet/wallet_handler.dart';
-import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
+import 'package:stcerwallet/pages/transactions/stc_webview.dart';
 import 'package:stcerwallet/view/list/switch_list_item_widget.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -43,6 +43,14 @@ class SettingsPage extends StatelessWidget {
                         resetWallet();
                       },
                       child: new Text('Reset')),
+                  new RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(new MaterialPageRoute(builder: (_) {
+                          return new StcWebView();
+                        }));
+                      },
+                      child: new Text('Webview Test')),
                 ],
               )));
     });

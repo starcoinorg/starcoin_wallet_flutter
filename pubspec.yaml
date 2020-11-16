@@ -44,6 +44,7 @@ dependencies:
   font_awesome_flutter: ^8.2.0
   web3dart: ^1.2.3
   optional: '5.0.0'
+  webview_flutter: 1.0.7
   starcoin_wallet:
     #git:
     #  url: git://github.com/starcoinorg/starcoin.dart

@@ -1,7 +1,14 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:starcoin_wallet/starcoin/starcoin.dart';
+import 'package:starcoin_wallet/wallet/account.dart';
+import 'package:starcoin_wallet/wallet/helper.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
+import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class StcWebView extends StatefulWidget {
@@ -13,6 +20,9 @@ class StcWebViewState extends State<StcWebView> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
+  ConfigurationService configurationService;
+  WebViewController _webViewController;
+
   @override
   void initState() {
     super.initState();
@@ -21,13 +31,13 @@ class StcWebViewState extends State<StcWebView> {
 
   @override
   Widget build(BuildContext context) {
+    configurationService = Provider.of<ConfigurationService>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter WebView example'),
         // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
         actions: <Widget>[
           NavigationControls(_controller.future),
-          SampleMenu(_controller.future),
         ],
       ),
       // We're using a Builder here so we have a context that is below the Scaffold
@@ -35,21 +45,18 @@ class StcWebViewState extends State<StcWebView> {
       body: Builder(builder: (BuildContext context) {
         return WebView(
           //initialUrl: 'https://flutter.dev',
-          initialUrl: 'http://192.168.245.165:8000/test_webview.html',
+          initialUrl: 'http://192.168.31.17:8000/test_webview.html',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
+            _webViewController = webViewController;
           },
           // TODO(iskakaushik): Remove this when collection literals makes it to stable.
           // ignore: prefer_collection_literals
           javascriptChannels: <JavascriptChannel>[
-            _toasterJavascriptChannel(context),
+            _javascriptChannel(context),
           ].toSet(),
           navigationDelegate: (NavigationRequest request) {
-            if (request.url.startsWith('https://www.youtube.com/')) {
-              print('blocking navigation to $request}');
-              return NavigationDecision.prevent;
-            }
             print('allowing navigation to $request');
             return NavigationDecision.navigate;
           },
@@ -62,45 +69,28 @@ class StcWebViewState extends State<StcWebView> {
           gestureNavigationEnabled: true,
         );
       }),
-      floatingActionButton: favoriteButton(),
     );
   }
 
-  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
+  JavascriptChannel _javascriptChannel(BuildContext context) {
     return JavascriptChannel(
-        name: 'Toaster',
-        onMessageReceived: (JavascriptMessage message) {
+        name: 'JsActions',
+        onMessageReceived: (JavascriptMessage message) async{
           // ignore: deprecated_member_use
-          Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
-        });
-  }
-
-  Widget favoriteButton() {
-    return FutureBuilder<WebViewController>(
-        future: _controller.future,
-        builder: (BuildContext context,
-            AsyncSnapshot<WebViewController> controller) {
-          if (controller.hasData) {
-            return FloatingActionButton(
-              onPressed: () async {
-                final String url = await controller.data.currentUrl();
-                // ignore: deprecated_member_use
-                Scaffold.of(context).showSnackBar(
-                  SnackBar(content: Text('Favorited $url')),
-                );
-              },
-              child: const Icon(Icons.favorite),
-            );
+          try{
+          final privateKeyHex = configurationService.getPrivateKey();
+          final privateKey = Helpers.hexToBytes(privateKeyHex);
+          final account = Account.fromPrivateKey(privateKey, BASEURL);
+          final payloadLcs = Helpers.hexToBytes(message.message);
+          final payload = TransactionPayload.lcsDeserialize(payloadLcs);
+          final result=await account.sendTransaction(payload);
+          final txnHashFunction = "pushTxnHash('"+result.txnHash+"');";
+          _webViewController.evaluateJavascript(txnHashFunction);
+          }catch(ex){
+            log(ex.toString());
           }
-          return Container();
         });
   }
-}
-
-enum MenuOptions {
-  caculateSum,
 }
 
 class SampleMenu extends StatelessWidget {
@@ -111,27 +101,7 @@ class SampleMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<WebViewController>(
-      future: controller,
-      builder:
-          (BuildContext context, AsyncSnapshot<WebViewController> controller) {
-        return PopupMenuButton<MenuOptions>(
-          onSelected: (MenuOptions value) {
-            switch (value) {
-              case MenuOptions.caculateSum:
-                _onCaculateSum(controller.data, context);
-                break;
-            }
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuItem<MenuOptions>>[
-            const PopupMenuItem<MenuOptions>(
-              value: MenuOptions.caculateSum,
-              child: Text('Caculate Sum example'),
-            ),
-          ],
-        );
-      },
-    );
+    return null;
   }
 
   void _onCaculateSum(

@@ -1,7 +1,7 @@
-const BASEURL = "http://proxima3.seed.starcoin.org:9850";
-const WSURL = "ws://proxima3.seed.starcoin.org:9870";
-//const BASEURL = "http://192.168.245.165:9850";
-//const WSURL = "ws://192.168.245.165:9870";
+//const BASEURL = "http://proxima3.seed.starcoin.org:9850";
+//const WSURL = "ws://proxima3.seed.starcoin.org:9870";
+const BASEURL = "http://192.168.31.17:9850";
+const WSURL = "ws://192.168.31.17:9870";
 
 class WalletUtil {
   static String getShortAddress(String address) {

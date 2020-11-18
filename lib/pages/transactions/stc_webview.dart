@@ -75,40 +75,21 @@ class StcWebViewState extends State<StcWebView> {
   JavascriptChannel _javascriptChannel(BuildContext context) {
     return JavascriptChannel(
         name: 'JsActions',
-        onMessageReceived: (JavascriptMessage message) async{
+        onMessageReceived: (JavascriptMessage message) async {
           // ignore: deprecated_member_use
-          try{
-          final privateKeyHex = configurationService.getPrivateKey();
-          final privateKey = Helpers.hexToBytes(privateKeyHex);
-          final account = Account.fromPrivateKey(privateKey, BASEURL);
-          final payloadLcs = Helpers.hexToBytes(message.message);
-          final payload = TransactionPayload.lcsDeserialize(payloadLcs);
-          final result=await account.sendTransaction(payload);
-          final txnHashFunction = "pushTxnHash('"+result.txnHash+"');";
-          _webViewController.evaluateJavascript(txnHashFunction);
-          }catch(ex){
+          try {
+            final privateKeyHex = configurationService.getPrivateKey();
+            final privateKey = Helpers.hexToBytes(privateKeyHex);
+            final account = Account.fromPrivateKey(privateKey, BASEURL);
+            final payloadLcs = Helpers.hexToBytes(message.message);
+            final payload = TransactionPayload.lcsDeserialize(payloadLcs);
+            final result = await account.sendTransaction(payload);
+            final txnHashFunction = "pushTxnHash('" + result.txnHash + "');";
+            _webViewController.evaluateJavascript(txnHashFunction);
+          } catch (ex) {
             log(ex.toString());
           }
         });
-  }
-}
-
-class SampleMenu extends StatelessWidget {
-  SampleMenu(this.controller);
-
-  final Future<WebViewController> controller;
-  final CookieManager cookieManager = CookieManager();
-
-  @override
-  Widget build(BuildContext context) {
-    return null;
-  }
-
-  void _onCaculateSum(
-      WebViewController controller, BuildContext context) async {
-    // Send a message with the user agent string to the Toaster JavaScript channel we registered
-    // with the WebView.
-    print(await controller.evaluateJavascript('sum(4,6);'));
   }
 }
 

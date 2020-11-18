@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -19,6 +20,32 @@ class SettingsPage extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
 
     return StoreBuilder<AppState>(builder: (context, store) {
+      var widgets = <Widget>[
+        new SwitchListItemWidget(
+          title: 'Theme Mode',
+          isChecked: !store.state.theme.isDark(),
+          valueChanged: (isChecked) {
+            //store.dispatch(Action.ChangeTheme);
+          },
+          onTapCallback: () {
+            //store.dispatch(Action.ChangeTheme);
+          },
+        ),
+        new RaisedButton(
+            onPressed: () {
+              resetWallet();
+            },
+            child: new Text('Reset')),
+      ];
+      if (Platform.isAndroid || Platform.isIOS) {
+        widgets.add(new RaisedButton(
+            onPressed: () {
+              Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+                return new StcWebView();
+              }));
+            },
+            child: new Text('Webview Test')));
+      }
       return Scaffold(
           appBar: AppBar(
             title: new Text('Settings'),
@@ -27,31 +54,7 @@ class SettingsPage extends StatelessWidget {
               width: double.infinity,
               color: theme.backgroundColor,
               child: new Column(
-                children: <Widget>[
-                  new SwitchListItemWidget(
-                    title: 'Theme Mode',
-                    isChecked: !store.state.theme.isDark(),
-                    valueChanged: (isChecked) {
-                      //store.dispatch(Action.ChangeTheme);
-                    },
-                    onTapCallback: () {
-                      //store.dispatch(Action.ChangeTheme);
-                    },
-                  ),
-                  new RaisedButton(
-                      onPressed: () {
-                        resetWallet();
-                      },
-                      child: new Text('Reset')),
-                  new RaisedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(new MaterialPageRoute(builder: (_) {
-                          return new StcWebView();
-                        }));
-                      },
-                      child: new Text('Webview Test')),
-                ],
+                children: widgets,
               )));
     });
   }

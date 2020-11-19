@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:stcerwallet/manager/wallet_initialzer.dart';
-import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/pages/wallet/init/wallet_create_result_page.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/password_inputfield.dart';
 import 'package:stcerwallet/view/status_widget.dart';
-import 'package:http/http.dart' as http;
 
 class WalletCreatePage extends StatefulWidget {
   static const String routeName = Routes.main + '/create';

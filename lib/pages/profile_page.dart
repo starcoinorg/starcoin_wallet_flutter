@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stcerwallet/context/wallet/wallet_handler.dart';
 import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/pages/profile/about_page.dart';
 import 'package:stcerwallet/pages/profile/settings_page.dart';
@@ -19,37 +18,35 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _bodyItemsGroup(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-
-    return new Container(
-      height: Dimens.itemHeight,
-      color: Colors.white,
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          new Row(
-            children: <Widget>[
-              new Icon(Icons.library_books),
-              new Padding(
-                padding: EdgeInsets.only(left: 4.0),
-                child: new Text('Address Book'),
-              )
-            ],
-          ),
-          new Row(
-            children: <Widget>[
-              new Icon(Icons.notifications),
-              new Padding(
-                padding: EdgeInsets.only(left: 4.0),
-                child: new Text('Notifications'),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
+  // Widget _bodyItemsGroup(BuildContext context) {
+  //   return new Container(
+  //     height: Dimens.itemHeight,
+  //     color: Colors.white,
+  //     child: new Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //       children: <Widget>[
+  //         new Row(
+  //           children: <Widget>[
+  //             new Icon(Icons.library_books),
+  //             new Padding(
+  //               padding: EdgeInsets.only(left: 4.0),
+  //               child: new Text('Address Book'),
+  //             )
+  //           ],
+  //         ),
+  //         new Row(
+  //           children: <Widget>[
+  //             new Icon(Icons.notifications),
+  //             new Padding(
+  //               padding: EdgeInsets.only(left: 4.0),
+  //               child: new Text('Notifications'),
+  //             )
+  //           ],
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   _appBar(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -65,7 +62,7 @@ class ProfilePage extends StatelessWidget {
     return Column(
       children: <Widget>[
         _bodyAvatarAndNames(context),
-        _bodyItemsGroup(context),
+        //_bodyItemsGroup(context),
         Divider(
           height: Dimens.line,
         ),

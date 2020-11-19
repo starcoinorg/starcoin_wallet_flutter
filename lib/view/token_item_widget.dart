@@ -9,7 +9,7 @@ class TokenItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    //final ThemeData theme = Theme.of(context);
     final tokenIconSize = 40.0;
     return new InkWell(
       child: new Ink(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stcerwallet/pages/wallet_page.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/edu_tips_widget.dart';
 import 'package:stcerwallet/view/password_inputfield.dart';

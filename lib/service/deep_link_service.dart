@@ -35,12 +35,6 @@ class DeepLinkBloc extends Bloc {
     return stream.receiveBroadcastStream().listen((d) => onRedirected(d));
   }
 
-  _onRedirected(String uri) {
-    // Here can be any uri analysis, checking tokens etc, if it’s necessary
-    // Throw deep link URI into the BloC's stream
-    //stateSink.add(uri);
-  }
-
   @override
   void dispose() {
     _stateController.close();

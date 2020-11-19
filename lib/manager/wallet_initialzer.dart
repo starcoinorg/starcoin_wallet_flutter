@@ -4,11 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
-import 'package:stcerwallet/sdk/bip32/extended_private_key.dart';
-import 'package:stcerwallet/sdk/bip32/network.dart';
 import 'package:stcerwallet/sdk/bip39/english.dart';
 import 'package:stcerwallet/sdk/bip39/mnemonic_generator.dart';
-import 'package:stcerwallet/sdk/bip39/numeric.dart';
 import 'package:stcerwallet/sdk/bip39/seed_calculator.dart';
 import 'package:stcerwallet/sdk/bip39/word_list.dart';
 import 'package:stcerwallet/sdk/bip44/address_index.dart';

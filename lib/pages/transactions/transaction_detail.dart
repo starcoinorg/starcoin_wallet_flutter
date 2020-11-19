@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:starcoin_wallet/wallet/wallet_client.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
+import 'package:stcerwallet/pages/wallet/receive_page.dart';
+import 'package:stcerwallet/util/wallet_util.dart';
 
 class TransactionDetailPage extends StatelessWidget {
   static const String routeName = Routes.wallet + '/transaction_detail';
@@ -13,7 +15,9 @@ class TransactionDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: new Text('TransactionDetail')),
+        appBar: AppBar(
+          title: new Text('TransactionDetail'),
+        ),
         body: Container(
           padding: EdgeInsets.only(left: 24.0, right: 24.0),
           child: Column(
@@ -22,40 +26,37 @@ class TransactionDetailPage extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Text("Transaction Hash : "),
-                  Text(
-                      "${transactionWithInfo.txnInfo['transaction_hash']}")
+                  Text(WalletUtil.getShortAddress(
+                      "${transactionWithInfo.txnInfo['transaction_hash']}"))
                 ],
               ),
               SizedBox(height: 5),
               Row(
                 children: <Widget>[
                   Text("Status : "),
-                  Text(
-                      "${transactionWithInfo.txnInfo['status']}")
+                  Text("${transactionWithInfo.txnInfo['status']}")
                 ],
               ),
               SizedBox(height: 5),
               Row(
                 children: <Widget>[
                   Text("Block Hash : "),
-                  Text(
-                      "${transactionWithInfo.event['block_hash']}")
+                  Text(WalletUtil.getShortAddress(
+                      "${transactionWithInfo.event['block_hash']}"))
                 ],
               ),
               SizedBox(height: 5),
               Row(
                 children: <Widget>[
                   Text("Block Number : "),
-                  Text(
-                      "${transactionWithInfo.event['block_number']}")
+                  Text("${transactionWithInfo.event['block_number']}")
                 ],
               ),
               SizedBox(height: 5),
               Row(
                 children: <Widget>[
                   Text("Gas Used : "),
-                  Text(
-                      "${transactionWithInfo.txnInfo['gas_used']}")
+                  Text("${transactionWithInfo.txnInfo['gas_used']}")
                 ],
               ),
               SizedBox(height: 5),
@@ -94,16 +95,28 @@ class TransactionDetailPage extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Text("Sender Address : "),
-                  Text(
-                      "${transactionWithInfo.txn['UserTransaction']['raw_txn']['sender']}")
+                  Text(WalletUtil.getShortAddress(
+                      "${transactionWithInfo.txn['UserTransaction']['raw_txn']['sender']}"))
                 ],
               ),
               SizedBox(height: 5),
               Row(
                 children: <Widget>[
                   Text("Sender Public Key: "),
-                  Text(
-                      "${transactionWithInfo.txn['UserTransaction']['authenticator']['Ed25519']['public_key']}")
+                  InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(new MaterialPageRoute(builder: (_) {
+                          return ReceivePage.name(
+                              transactionWithInfo.txn['UserTransaction']
+                                  ['raw_txn']['sender'],
+                              transactionWithInfo.txn['UserTransaction']
+                                  ['authenticator']['Ed25519']['public_key']);
+                        }));
+                      },
+                      borderRadius: BorderRadius.zero,
+                      child: Text(WalletUtil.getShortAddress(
+                          "${transactionWithInfo.txn['UserTransaction']['authenticator']['Ed25519']['public_key']}")))
                 ],
               ),
             ],

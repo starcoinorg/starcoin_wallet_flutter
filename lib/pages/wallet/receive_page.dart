@@ -7,15 +7,13 @@ class ReceivePage extends StatelessWidget {
 
   final String publicKey;
 
-  final String _avatar;
 
-  ReceivePage.name(this.address,this.publicKey, this._avatar);
+  ReceivePage.name(this.address,this.publicKey);
 
   @override
   Widget build(BuildContext context) {
     //final ThemeData theme = Theme.of(context);
 
-    final addressWithKey = publicKey+address;
     return new Scaffold(
       appBar: _appBar(context),
       body: Center(
@@ -24,10 +22,14 @@ class ReceivePage extends StatelessWidget {
           children: <Widget>[
             QrImage(
               data: publicKey ?? "",
-              size: 150.0,
+              size: 250.0,
             ),
-            SelectableText("Address is :"+address ?? "",),
-            SelectableText("Public Key is :"+publicKey ?? ""),
+            SizedBox(height: 5),
+            Text(" Address ",style: TextStyle(color:Colors.grey),),
+            SelectableText(address ?? "",),
+            SizedBox(height: 5),
+            Text(" Public Key ",style: TextStyle(color:Colors.grey),),
+            SelectableText(publicKey ?? ""),
           ],
         ),
       ));

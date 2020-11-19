@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:stcerwallet/config/actions.dart';
 import 'package:stcerwallet/config/states.dart';
 import 'package:stcerwallet/pages/dialogs.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';

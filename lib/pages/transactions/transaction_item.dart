@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:starcoin_wallet/wallet/wallet_client.dart';
 import 'package:stcerwallet/pages/transactions/transaction_detail.dart';
 import 'package:stcerwallet/style/styles.dart';
+import 'package:stcerwallet/util/wallet_util.dart';
 
 Color darkBlue = Color(0xff071d40);
 Color lightBlue = Color(0xff1b4dff);
@@ -30,25 +31,12 @@ class TransactionItem extends StatelessWidget {
             borderRadius: BorderRadius.zero,
             child: Column(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        "new txn ",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subhead
-                            .apply(color: darkBlue, fontWeightDelta: 2),
-                      ),
-                    ),
-                  ],
-                ),
                 SizedBox(height: 5),
                 Row(
                   children: <Widget>[
                     Text("Sender: "),
                     Text(
-                        "${transactionWithInfo.txn['UserTransaction']['authenticator']['Ed25519']['public_key']}")
+                        WalletUtil.getShortAddress("${transactionWithInfo.txn['UserTransaction']['authenticator']['Ed25519']['public_key']}"))
                   ],
                 ),
                 SizedBox(height: 5),
@@ -92,6 +80,7 @@ class TransactionItem extends StatelessWidget {
                     Text("${transactionWithInfo.txnInfo['status']}")
                   ],
                 ),
+                SizedBox(height: 5),
               ],
             )));
   }

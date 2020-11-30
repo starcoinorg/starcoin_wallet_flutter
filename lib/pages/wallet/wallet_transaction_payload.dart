@@ -5,6 +5,7 @@ import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:starcoin_wallet/wallet/helper.dart';
 import 'package:stcerwallet/components/wallet/transaction_payload_form.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
+import 'package:stcerwallet/service/network_manager.dart';
 import 'package:stcerwallet/util/wallet_util.dart';
 import 'dart:developer';
 
@@ -28,10 +29,10 @@ class WalletTransactionPayloadPage extends HookWidget {
         onSubmit: (payloadHex) async {
           try {
             final privateKey = Helpers.hexToBytes(privateKeyString);
-            final account = Account.fromPrivateKey(privateKey, BASEURL);
+            final account = Account.fromPrivateKey(privateKey);
             final payloadLcs = Helpers.hexToBytes(payloadHex);
             final payload = TransactionPayload.lcsDeserialize(payloadLcs);
-            await account.sendTransaction(payload);
+            await account.sendTransaction(NetworkManager.getCurrentNetworkUrl().httpUrl,payload);
           } catch (ex) {
             log(ex.toString());
           }

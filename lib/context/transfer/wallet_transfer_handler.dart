@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:stcerwallet/context/transfer/wallet_transfer_state.dart';
 import 'package:stcerwallet/model/wallet_transfer.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
+import 'package:stcerwallet/service/network_manager.dart';
 import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:starcoin_wallet/serde/serde.dart';
@@ -33,8 +34,9 @@ class WalletTransferHandler {
 
     try {
       var account =
-          Account.fromPrivateKey(Helpers.hexToBytes(privateKey), BASEURL);
+          Account.fromPrivateKey(Helpers.hexToBytes(privateKey));
       await account.transferSTC(
+          NetworkManager.getCurrentNetworkUrl().httpUrl,
           Int128(0, int.parse(amount)),
           AccountAddress(Helpers.hexToBytes(to)),
           Bytes(getAuthKey(Helpers.hexToBytes(publicKey))));
@@ -69,10 +71,10 @@ class WalletTransferHandler {
 
     try {
       var account =
-          Account.fromPrivateKey(Helpers.hexToBytes(privateKey), BASEURL);
+          Account.fromPrivateKey(Helpers.hexToBytes(privateKey));
       final payloadLcs = Helpers.hexToBytes(payloadHex);
       final payload = TransactionPayload.lcsDeserialize(payloadLcs);
-      await account.sendTransaction(payload);
+      await account.sendTransaction(NetworkManager.getCurrentNetworkUrl().httpUrl,payload);
       completer.complete(true);
     } catch (ex) {
       log(ex);

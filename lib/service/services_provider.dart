@@ -4,6 +4,7 @@ import 'package:stcerwallet/app_config.dart';
 import 'package:stcerwallet/service/address_service.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/service/contract_service.dart';
+import 'package:stcerwallet/service/network_manager.dart';
 import 'package:stcerwallet/service/watch_event_service.dart';
 import 'package:stcerwallet/service/deep_link_service.dart';
 import 'package:stcerwallet/util/contract_parser.dart';
@@ -40,8 +41,9 @@ Future<List<SingleChildCloneableWidget>> createProviders(
 
   final contractService = ContractService(client, contract);
 
-  final socket = IOWebSocketChannel.connect(Uri.parse(WSURL));
-  final rpc = JsonRPC(BASEURL, Client());
+  final starcoinUrl=NetworkManager.getCurrentNetworkUrl();
+  final socket = IOWebSocketChannel.connect(Uri.parse(starcoinUrl.wsUrl));
+  final rpc = JsonRPC(starcoinUrl.httpUrl, Client());
   final pubSubClient = PubSubClient(socket.cast<String>(), rpc);
 
   final watchEventService = WatchEventService(pubSubClient);

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stcerwallet/config/states.dart';
+import 'package:stcerwallet/service/database_service.dart';
 import 'package:stcerwallet/service/navigator_observer.dart';
+import 'package:stcerwallet/service/network_manager.dart';
 import 'package:stcerwallet/service/services_provider.dart';
 import 'package:stcerwallet/style/themes.dart';
 import 'package:stcerwallet/pages/main_page.dart';
@@ -13,6 +15,12 @@ import 'app_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await DatabaseService.getInstance();
+  await NetworkManager.getNetworks();
+  await NetworkManager.getCurrentNetwork();
+  await NetworkManager.getCurrentNetworkUrl();
+
   final providers = await createProviders(AppConfig().params["ropsten"]);
 
   Store<AppState> store = new Store(appReducer,

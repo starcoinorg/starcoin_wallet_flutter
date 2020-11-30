@@ -15,6 +15,7 @@ import 'package:stcerwallet/pages/wallet/receive_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_manage_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_transfer_page.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
+import 'package:stcerwallet/service/network_manager.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/token_item_widget.dart';
 import 'package:stcerwallet/view/wallet_widget.dart';
@@ -94,7 +95,7 @@ class WalletPage extends HookWidget {
     final publicKey = store.state.account.keyPair.getPublicKeyHex();
 
     try {
-      final stcBalance = await store.state.account.balanceOfStc();
+      final stcBalance = await store.state.account.balanceOfStc(NetworkManager.getCurrentNetworkUrl().httpUrl);
 
       return AccountState(
           balance: stcBalance.toBigInt(),

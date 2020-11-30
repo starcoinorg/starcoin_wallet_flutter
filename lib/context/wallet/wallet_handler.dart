@@ -7,6 +7,7 @@ import 'package:stcerwallet/service/contract_service.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:stcerwallet/service/deep_link_service.dart';
 import 'package:stcerwallet/service/navigator_observer.dart';
+import 'package:stcerwallet/service/network_manager.dart';
 import 'package:stcerwallet/service/watch_event_service.dart';
 import 'dart:developer';
 
@@ -101,7 +102,7 @@ class WalletHandler {
 
     var tokenBalance = BigInt.zero;
 
-    var stcBalance = await state.account.balanceOfStc();
+    var stcBalance = await state.account.balanceOfStc(NetworkManager.getCurrentNetworkUrl().httpUrl);
 
     // TODO
     var balance = BigInt.from(stcBalance.low);

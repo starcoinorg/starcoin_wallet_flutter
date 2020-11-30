@@ -8,6 +8,7 @@ import 'package:starcoin_wallet/starcoin/starcoin.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:starcoin_wallet/wallet/helper.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
+import 'package:stcerwallet/service/network_manager.dart';
 import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -80,10 +81,10 @@ class StcWebViewState extends State<StcWebView> {
           try {
             final privateKeyHex = configurationService.getPrivateKey();
             final privateKey = Helpers.hexToBytes(privateKeyHex);
-            final account = Account.fromPrivateKey(privateKey, BASEURL);
+            final account = Account.fromPrivateKey(privateKey);
             final payloadLcs = Helpers.hexToBytes(message.message);
             final payload = TransactionPayload.lcsDeserialize(payloadLcs);
-            final result = await account.sendTransaction(payload);
+            final result = await account.sendTransaction(NetworkManager.getCurrentNetworkUrl().httpUrl,payload);
             final txnHashFunction = "pushTxnHash('" + result.txnHash + "');";
             _webViewController.evaluateJavascript(txnHashFunction);
           } catch (ex) {

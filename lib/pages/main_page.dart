@@ -66,6 +66,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     var configurationService = Provider.of<ConfigurationService>(context);
     if (configurationService.didSetupWallet())
       return WalletProvider(builder: (context, store) {
+
         return new Scaffold(
           body: new PageView(
             children: <Widget>[
@@ -78,8 +79,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           ),
           bottomNavigationBar: botNavBar,
         );
-
-        //return WalletMainPage("Your wallet");
       });
 
     return IntroPage();

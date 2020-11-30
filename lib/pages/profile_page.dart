@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/pages/profile/about_page.dart';
+import 'package:stcerwallet/pages/profile/network_settings_page.dart';
 import 'package:stcerwallet/pages/profile/settings_page.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/pages/wallet/init/identity_init_page.dart';
@@ -75,12 +76,20 @@ class ProfilePage extends StatelessWidget {
         ),
         new ListItemWidget(
           iconData: Icons.settings,
-          title: 'Settings',
+          title: 'Wallet Settings',
           onTapCallback: () {
             Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
               return SettingsPage(walletHandler);
             }));
           },
+          bottomLineType: BottomLineType.Gap,
+        ),
+        new ListItemWidget(
+          iconData: Icons.settings,
+          title: 'Node Settings',
+          onTapCallback: () {
+            Navigator.of(context).pushNamed(NetworkPage.routeName);
+            },
           bottomLineType: BottomLineType.Gap,
         ),
         new ListItemWidget(

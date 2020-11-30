@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stcerwallet/context/wallet/wallet_handler.dart';
 import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
+import 'package:stcerwallet/service/network_manager.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/pages/transactions/transaction_item.dart';
 import 'package:starcoin_wallet/wallet/wallet_client.dart';
@@ -108,8 +109,9 @@ class TransactionsPageState extends State<TransactionsPage> {
   }
 
   Future<List<TransactionWithInfo>> getAccountState(WalletHandler store) async {
-    final walletClient = new WalletClient(BASEURL);
-    final batchClient = new BatchClient(WSURL);
+    final starcoinUrl=NetworkManager.getCurrentNetworkUrl();
+    final walletClient = new WalletClient(starcoinUrl.httpUrl);
+    final batchClient = new BatchClient(starcoinUrl.wsUrl);
     try {
       final nodeInfo = await walletClient.getNodeInfo();
       var fromBlock = nodeInfo['peer_info']['latest_header']['number'] - 100;

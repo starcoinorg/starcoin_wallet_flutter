@@ -5,10 +5,12 @@ abstract class IConfigurationService {
   Future<void> setEntropyMnemonic(String value);
   Future<void> setupDone(bool value);
   Future<void> setPrivateKey(String value);
+  Future<void> setDefaultNetwork(String value);
   String getMnemonic();
   String getPrivateKey();
   bool didSetupWallet();
   String getEntropyMnemonic();
+  String getDefaultNetwork();
 }
 
 class ConfigurationService implements IConfigurationService {
@@ -54,5 +56,15 @@ class ConfigurationService implements IConfigurationService {
   @override
   String getEntropyMnemonic() {
     return _preferences.getString("entropyMnemonic");
+  }
+
+  @override
+  String getDefaultNetwork() {
+    return _preferences.getString("default_network");
+  }
+
+  @override
+  Future<void> setDefaultNetwork(String value) async{
+    await _preferences.setString("default_network", value);
   }
 }

@@ -179,7 +179,6 @@ class NetworkManager {
 
   static StarcoinUrl getCurrentNetworkUrl() {
     for(var network in _networkSet){
-      log("network is "+network.networkName);
       if(network.networkName==_defualtNetwork){
         return StarcoinUrl("http://"+network.url+":9850", "ws://"+network.url+":9870");
       }

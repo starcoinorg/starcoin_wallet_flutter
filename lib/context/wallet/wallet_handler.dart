@@ -1,4 +1,5 @@
 import 'package:starcoin_wallet/wallet/helper.dart';
+import 'package:starcoin_wallet/wallet/pubsub.dart';
 import 'package:stcerwallet/model/wallet.dart';
 import 'package:stcerwallet/pages/wallet/wallet_transaction_payload.dart';
 import 'package:stcerwallet/service/address_service.dart';
@@ -112,5 +113,27 @@ class WalletHandler {
   Future<void> resetWallet() async {
     await _configurationService.setMnemonic(null);
     await _configurationService.setupDone(false);
+    await _watchEventService.dispose();
   }
+
+  Future<void> stopWatch() async {
+    await _watchEventService.dispose();
+  }
+
+  Future<void> startWatch() async {
+    _watchEventService.listenTransfer(state.account, () async {
+      log("new txn event");
+      await fetchOwnBalance();
+    });
+  }
+
+  Future<void> startNewNodeWatch(PubSubClient client) async {
+    _watchEventService.setClient(client);
+
+    _watchEventService.listenTransfer(state.account, () async {
+      log("new txn event");
+      await fetchOwnBalance();
+    });
+  }
+
 }

@@ -19,7 +19,6 @@ void main() async {
   await DatabaseService.getInstance();
   await NetworkManager.getNetworks();
   await NetworkManager.getCurrentNetwork();
-  await NetworkManager.getCurrentNetworkUrl();
 
   final providers = await createProviders(AppConfig().params["ropsten"]);
 

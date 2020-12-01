@@ -11,7 +11,6 @@ import 'package:stcerwallet/util/contract_parser.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -47,6 +46,7 @@ Future<List<SingleChildCloneableWidget>> createProviders(
   final pubSubClient = PubSubClient(socket.cast<String>(), rpc);
 
   final watchEventService = WatchEventService(pubSubClient);
+
   final bloc = DeepLinkBloc();
 
   return [

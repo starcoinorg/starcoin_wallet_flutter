@@ -2,26 +2,32 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:stcerwallet/context/wallet/wallet_provider.dart';
+import 'package:stcerwallet/context/wallet/wallet_handler.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
-import 'package:stcerwallet/service/contract_service.dart';
 import 'package:stcerwallet/service/network_manager.dart';
 import 'package:stcerwallet/style/styles.dart';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+
 class NetworkPage extends StatefulWidget {
   static const String routeName = Routes.profile + "/network_settings";
 
+  final WalletHandler _walletHandler;
+
+  NetworkPage(this._walletHandler);
+
   @override
   State<StatefulWidget> createState() {
-    return NetworkPageState();
+    return NetworkPageState(_walletHandler);
   }
 }
 
 class NetworkPageState extends State<NetworkPage> {
   bool needReload;
+  final WalletHandler _walletHandler;
+
+  NetworkPageState(this._walletHandler);
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +113,7 @@ class NetworkPageState extends State<NetworkPage> {
                         itemCount: networks.length,
                         itemBuilder: (ctx, i) {
                           return NetworkItem(networks[i],
-                              defaultNetwork, reloadList);
+                              defaultNetwork, reloadList,this.afterChangeNetwork);
                         },
                         separatorBuilder: (BuildContext context, int index) {
                           return new Divider(
@@ -137,6 +143,11 @@ class NetworkPageState extends State<NetworkPage> {
     });
   }
 
+  Future<void> afterChangeNetwork() async {
+    await _walletHandler.stopWatch();
+    await _walletHandler.startNewNodeWatch(NetworkManager.getClient());
+  }
+
   void reloadList() {
     setState(() {
       needReload = true;
@@ -146,15 +157,17 @@ class NetworkPageState extends State<NetworkPage> {
 }
 
 typedef ReloadFunction = Function();
+typedef AfterNetworkChangeFunction = Function();
 
 class NetworkItem extends StatelessWidget {
   final NetworkUrl networkUrl;
   final String defaultNetowrk;
 
   final ReloadFunction reloadFunction;
+  final AfterNetworkChangeFunction afterNetworkChangeFunction;
 
   NetworkItem(this.networkUrl, this.defaultNetowrk,
-      this.reloadFunction);
+      this.reloadFunction,this.afterNetworkChangeFunction);
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +180,7 @@ class NetworkItem extends StatelessWidget {
           onChanged: (value) async {
             await NetworkManager.setCurrentNetwork(value);
             reloadFunction();
+            await afterNetworkChangeFunction();
           },
           title: Row(children: <Widget>[
             Text(networkUrl.networkName),
@@ -196,6 +210,7 @@ class NetworkItem extends StatelessWidget {
           onChanged: (value) async {
             await NetworkManager.setCurrentNetwork(value);
             reloadFunction();
+            await afterNetworkChangeFunction();
           },
           title: Row(children: <Widget>[
             Text(networkUrl.networkName),

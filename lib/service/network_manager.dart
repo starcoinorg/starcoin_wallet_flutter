@@ -1,10 +1,13 @@
 import 'dart:collection';
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:stcerwallet/service/configuration_service.dart';
+import 'package:starcoin_wallet/wallet/json_rpc.dart';
+import 'package:starcoin_wallet/wallet/pubsub.dart';
 import 'package:stcerwallet/service/database_service.dart';
+import 'package:web_socket_channel/io.dart';
+
+import 'package:http/http.dart';
+
 
 enum Network { PROXIMA, HALLEY, DEV, TEST, MAIN }
 
@@ -122,6 +125,7 @@ class NetworkManager {
     try {
       final db = await DatabaseService.getInstance();
       await db.insertRaw(CONFIGINSERT,[DEFAULTNETWORK,network,network]);
+      await getNetworks();
       _defualtNetwork=network;
     } catch (ex) {
       log(ex.toString());
@@ -175,10 +179,19 @@ class NetworkManager {
 
   static StarcoinUrl getCurrentNetworkUrl() {
     for(var network in _networkSet){
+      log("network is "+network.networkName);
       if(network.networkName==_defualtNetwork){
         return StarcoinUrl("http://"+network.url+":9850", "ws://"+network.url+":9870");
       }
     }
-    throw Exception("can't find default network");
+    throw Exception("can't find default network ，default network is $_defualtNetwork");
+  }
+
+  static PubSubClient getClient(){
+    final starcoinUrl=NetworkManager.getCurrentNetworkUrl();
+    final socket = IOWebSocketChannel.connect(Uri.parse(starcoinUrl.wsUrl));
+    final rpc = JsonRPC(starcoinUrl.httpUrl, Client());
+    final pubSubClient = PubSubClient(socket.cast<String>(), rpc);
+    return pubSubClient;
   }
 }

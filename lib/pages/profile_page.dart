@@ -88,7 +88,9 @@ class ProfilePage extends StatelessWidget {
           iconData: Icons.settings,
           title: 'Node Settings',
           onTapCallback: () {
-            Navigator.of(context).pushNamed(NetworkPage.routeName);
+            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+              return NetworkPage(walletHandler);
+            }));
             },
           bottomLineType: BottomLineType.Gap,
         ),

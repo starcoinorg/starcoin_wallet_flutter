@@ -85,9 +85,6 @@ List<Page> _buildPages() {
     new Page(
         routeName: TransactionDetailPage.routeName,
         buildRoute: (BuildContext context) => new TransactionDetailPage(title: "Transaction Detail",)),
-    new Page(
-        routeName: NetworkPage.routeName,
-        buildRoute: (BuildContext context) => new NetworkPage()),
   ];
   if (Platform.isIOS || Platform.isAndroid) {
     pages.add(new Page(

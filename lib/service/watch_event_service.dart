@@ -11,12 +11,16 @@ abstract class IWatchEventService {
 
 class WatchEventService implements IWatchEventService {
 
-  final PubSubClient client;
+  PubSubClient client;
 
   WatchEventService(this.client);
 
   Future<void> dispose() async{
     await client.dispose();
+  }
+
+  void setClient(PubSubClient client){
+    this.client = client;
   }
 
   StreamSubscription listenTransfer(Account account,TransferEvent onTransfer,{int take}) {

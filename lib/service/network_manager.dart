@@ -40,8 +40,8 @@ const NETWORKNODES = {
     "proxima3.seed.starcoin.org"
   ],
   Network.HALLEY: [
-    "halley1.seed.starcoin.org",
     "halley2.seed.starcoin.org",
+    "halley1.seed.starcoin.org",
     "halley3.seed.starcoin.org"
   ],
   Network.DEV: ["localhost"],
@@ -54,6 +54,7 @@ class StarcoinUrl {
   final String wsUrl;
 
   StarcoinUrl(this.httpUrl,this.wsUrl);
+
 }
 
 class NetworkUrl extends Entity {
@@ -81,6 +82,22 @@ class NetworkUrl extends Entity {
   String getTableName() {
     return tableName;
   }
+
+  @override
+  String toString(){
+    return "network :$networkName,url :$url";
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NetworkUrl &&
+          runtimeType == other.runtimeType &&
+          networkName == other.networkName &&
+          url == other.url;
+
+  @override
+  int get hashCode => networkName.hashCode ^ url.hashCode;
 }
 
 NetworkUrl mapToNetworkUrl(Map<String, dynamic> record) {
@@ -99,7 +116,6 @@ class NetworkManager {
 
   static Future<List<NetworkUrl>> getNetworks() async {
     try {
-      _networkSet.clear();
       final db = await DatabaseService.getInstance();
       var result = await db.queryAll(NetworkUrl.tableName, mapToNetworkUrl);
       var networkDB = HashSet<String>();
@@ -186,7 +202,7 @@ class NetworkManager {
     throw Exception("can't find default network ，default network is $_defualtNetwork");
   }
 
-  static PubSubClient getClient(){
+  static PubSubClient getClient() {
     final starcoinUrl=NetworkManager.getCurrentNetworkUrl();
     final socket = IOWebSocketChannel.connect(Uri.parse(starcoinUrl.wsUrl));
     final rpc = JsonRPC(starcoinUrl.httpUrl, Client());

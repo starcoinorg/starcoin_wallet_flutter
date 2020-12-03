@@ -33,6 +33,9 @@ class DatabaseService {
           db.execute(
             "CREATE TABLE IF NOT EXISTS config(property VARCHAR(32) PRIMARY KEY, value VARCHAR(1024))",
           );
+          db.execute(
+            "CREATE TABLE IF NOT EXISTS seeds(seed VARCHAR(128) PRIMARY KEY, address_count INT,is_default BOOLEAN)",
+          );
           return db.execute(
             "CREATE TABLE IF NOT EXISTS network_urls(network VARCHAR(32) PRIMARY KEY, url VARCHAR(1024))",
           );

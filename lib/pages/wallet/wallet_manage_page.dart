@@ -91,11 +91,16 @@ class WalletManagePage extends StatelessWidget {
       color: Colors.transparent,
     ));
     for (int i = 0; i < 2; i++) {
-      list.add(new WalletItemWidget(wallet: new HDWallet(),onMoreTap: (){
-        Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-          return new SpecificWalletManagePage(wallet: new HDWallet(),);
-        }));
-      },));
+      list.add(new WalletItemWidget(
+        wallet: new HDWallet(),
+        onMoreTap: () {
+          Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+            return new SpecificWalletManagePage(
+              wallet: new HDWallet(),
+            );
+          }));
+        },
+      ));
     }
     list.add(new Divider(
       height: 10.0,
@@ -106,7 +111,7 @@ class WalletManagePage extends StatelessWidget {
       height: 10.0,
       color: Colors.transparent,
     ));
-    for(int i =0;i<2; i++){
+    for (int i = 0; i < 2; i++) {
       list.add(new WalletItemWidget(wallet: new HDWallet()));
     }
     return list;
@@ -122,12 +127,28 @@ class WalletManagePage extends StatelessWidget {
         children: <Widget>[
           new Icon(Icons.person,
               size: 20.0, color: theme.primaryColor.withOpacity(0.85)),
-          new Padding(
+          new Expanded(
+              child: new Padding(
             padding: EdgeInsets.only(left: 4.0),
             child: new Text(
               'Main Wallets',
               style: new TextStyle(
                   fontSize: 12.0, color: theme.primaryColor.withOpacity(0.85)),
+            ),
+          )),
+          new Ink(
+            padding: EdgeInsets.only(right: 8.0),
+            height: 32.0,
+            width: 40.0,
+            child: new InkWell(
+              child: new Icon(
+                Icons.add,
+                size: 20.0,
+              ),
+              onTap: () {
+                Navigator.of(context).pushNamed(WalletImportPage.routeName);
+              },
+              borderRadius: BorderRadius.circular(32.0),
             ),
           )
         ],
@@ -157,12 +178,15 @@ class WalletManagePage extends StatelessWidget {
             ),
           ),
           new Ink(
-            padding:EdgeInsets.only(right: 8.0),
+            padding: EdgeInsets.only(right: 8.0),
             height: 32.0,
             width: 40.0,
             child: new InkWell(
-              child: new Icon(Icons.add,size: 20.0,),
-              onTap: (){
+              child: new Icon(
+                Icons.add,
+                size: 20.0,
+              ),
+              onTap: () {
                 Navigator.of(context).pushNamed(WalletImportPage.routeName);
               },
               borderRadius: BorderRadius.circular(32.0),

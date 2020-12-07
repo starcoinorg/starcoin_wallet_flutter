@@ -1,7 +1,5 @@
 import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:stcerwallet/service/network_manager.dart';
-import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:starcoin_wallet/wallet/helper.dart';
 import 'package:starcoin_wallet/wallet/keypair.dart';
@@ -31,9 +29,8 @@ class AddressService implements IAddressService {
 
   @override
   String getPrivateKey(String mnemonic) {
-    final starcoinUrl=NetworkManager.getCurrentNetworkUrl();
     Wallet wallet =
-        new Wallet(mnemonic: mnemonic, url: starcoinUrl.httpUrl, salt: 'STARCOIN');
+        new Wallet(mnemonic: mnemonic, salt: 'STARCOIN');
     Account account = wallet.generateAccount(0);
     return Helpers.byteToHex(account.keyPair.getPrivateKey());
   }
@@ -51,7 +48,7 @@ class AddressService implements IAddressService {
     final cryptMnemonic = bip39.mnemonicToEntropy(mnemonic);
 
     Wallet wallet =
-        new Wallet(mnemonic: cryptMnemonic, url:  NetworkManager.getCurrentNetworkUrl().httpUrl, salt: 'STARCOIN');
+        new Wallet(mnemonic: cryptMnemonic,  salt: 'STARCOIN');
     Account account = wallet.generateAccount(0);
 
     await _configService.setMnemonic(mnemonic);

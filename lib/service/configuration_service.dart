@@ -1,16 +1,20 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stcerwallet/model/stored_keypair.dart';
 
 abstract class IConfigurationService {
   Future<void> setMnemonic(String value);
   Future<void> setEntropyMnemonic(String value);
   Future<void> setupDone(bool value);
   Future<void> setPrivateKey(String value);
-  Future<void> setDefaultNetwork(String value);
+  Future<void> setKeyPairs(List<StoredKeypair> value);
+  Future<void> addKeyPair(StoredKeypair value);
   String getMnemonic();
   String getPrivateKey();
   bool didSetupWallet();
   String getEntropyMnemonic();
-  String getDefaultNetwork();
+  List<StoredKeypair> getKeyPairs();
 }
 
 class ConfigurationService implements IConfigurationService {
@@ -59,12 +63,29 @@ class ConfigurationService implements IConfigurationService {
   }
 
   @override
-  String getDefaultNetwork() {
-    return _preferences.getString("default_network");
+  Future<void> setKeyPairs(List<StoredKeypair> value) async{
+    await _preferences.setString("keypairs", jsonEncode(value));
   }
 
   @override
-  Future<void> setDefaultNetwork(String value) async{
-    await _preferences.setString("default_network", value);
+  List<StoredKeypair> getKeyPairs(){
+    final keypairString = _preferences.getString("keypairs");
+    if(keypairString!=null){
+      return jsonDecode(keypairString);
+    }else{
+      return List();
+    }
+  }
+
+  @override
+  Future<void> addKeyPair(StoredKeypair value) async{
+    var keypairs=getKeyPairs();
+    for(StoredKeypair keypair in keypairs){
+      if(keypair==value){
+        return ;
+      }
+    }
+    keypairs.add(value);
+    await setKeyPairs(keypairs);
   }
 }

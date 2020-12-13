@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stcerwallet/config/states.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/service/database_service.dart';
 import 'package:stcerwallet/service/navigator_observer.dart';
 import 'package:stcerwallet/service/network_manager.dart';
@@ -20,7 +22,11 @@ void main() async {
   await NetworkManager.getNetworks();
   await NetworkManager.getCurrentNetwork();
 
-  final providers = await createProviders(AppConfig().params["ropsten"]);
+  final sharedPrefs = await SharedPreferences.getInstance();
+
+  final configurationService = ConfigurationService(sharedPrefs);
+
+  final providers = await createProviders(AppConfig().params["ropsten"],configurationService);
 
   Store<AppState> store = new Store(appReducer,
       initialState: new AppState(theme: kLightTheme, loadingVisible: false));

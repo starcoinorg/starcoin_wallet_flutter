@@ -54,8 +54,8 @@ class WalletItemWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            new Text('ETH-Wallet'),
-                            new Text('0xljlkjsldfjwkjerlkwerwrwe')
+                            new Text('STC-Address'),
+                            new Text(wallet.address)
                           ],
                         ),
                       )),

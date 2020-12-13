@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:starcoin_wallet/wallet/account_manager.dart';
 import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
+import 'package:stcerwallet/model/stored_keypair.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stcerwallet/pages/wallet/init/wallet_import_page.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/wallet_item_widget.dart';
 
@@ -84,36 +88,39 @@ class WalletManagePage extends StatelessWidget {
   }
 
   _body(BuildContext context) {
+    final configurationService = Provider.of<ConfigurationService>(context);
+    final keypairs=configurationService.getKeyPairs();
     List<Widget> list = new List();
     list.add(_bodyLabelMain(context));
     list.add(new Divider(
       height: 10.0,
       color: Colors.transparent,
     ));
-    for (int i = 0; i < 2; i++) {
+    for (StoredKeypair keypair in keypairs) {
+      final hdwallet = new HDWallet(name: "wallet",address: keypair.getAddress(),privateKey: keypair.getPrivateKey(),mnemonic: "");
       list.add(new WalletItemWidget(
-        wallet: new HDWallet(),
+        wallet: hdwallet,
         onMoreTap: () {
           Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
             return new SpecificWalletManagePage(
-              wallet: new HDWallet(),
+              wallet: hdwallet,
             );
           }));
         },
       ));
     }
-    list.add(new Divider(
-      height: 10.0,
-      color: Colors.transparent,
-    ));
-    list.add(_bodyLabelImported(context));
-    list.add(new Divider(
-      height: 10.0,
-      color: Colors.transparent,
-    ));
-    for (int i = 0; i < 2; i++) {
-      list.add(new WalletItemWidget(wallet: new HDWallet()));
-    }
+    // list.add(new Divider(
+    //   height: 10.0,
+    //   color: Colors.transparent,
+    // ));
+    // list.add(_bodyLabelImported(context));
+    // list.add(new Divider(
+    //   height: 10.0,
+    //   color: Colors.transparent,
+    // ));
+    // for (int i = 0; i < 2; i++) {
+    //   list.add(new WalletItemWidget(wallet: new HDWallet()));
+    // }
     return list;
   }
 
@@ -131,7 +138,7 @@ class WalletManagePage extends StatelessWidget {
               child: new Padding(
             padding: EdgeInsets.only(left: 4.0),
             child: new Text(
-              'Main Wallets',
+              'Main Wallet',
               style: new TextStyle(
                   fontSize: 12.0, color: theme.primaryColor.withOpacity(0.85)),
             ),
@@ -146,7 +153,9 @@ class WalletManagePage extends StatelessWidget {
                 size: 20.0,
               ),
               onTap: () {
-                Navigator.of(context).pushNamed(WalletImportPage.routeName);
+                final configurationService = Provider.of<ConfigurationService>(context);
+                final wallet = Wallet(mnemonic:configurationService.getEntropyMnemonic());
+
               },
               borderRadius: BorderRadius.circular(32.0),
             ),

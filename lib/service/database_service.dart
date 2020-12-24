@@ -10,9 +10,10 @@ abstract class Entity {
   Map<String, dynamic> toMap();
 }
 
-const CONFIGINSERT ="INSERT INTO config (property,value) VALUES (?,?) ON CONFLICT(property) DO UPDATE SET value=?";
+const CONFIGINSERT =
+    "INSERT INTO config (property,value) VALUES (?,?) ON CONFLICT(property) DO UPDATE SET value=?";
 
-typedef MapFunction<T> = T Function(Map<String,dynamic> record);
+typedef MapFunction<T> = T Function(Map<String, dynamic> record);
 
 class DatabaseService {
   final Database _database;
@@ -21,13 +22,13 @@ class DatabaseService {
   static DatabaseService databaseService;
 
   static Future<DatabaseService> getInstance() async {
-    if(databaseService == null) {
+    if (databaseService == null) {
       final path = join(await getDatabasesPath(), 'stc_database.db');
       log("db file path is $path");
       final db = await openDatabase(
 // 设置数据库的路径。注意：使用 `path` 包中的 `join` 方法是
 // 确保在多平台上路径都正确的最佳实践。
-       path,
+        path,
 // 当数据库第一次被创建的时候，创建一个数据表，用以存储狗狗们的数据。
         onCreate: (db, version) {
           db.execute(
@@ -45,7 +46,7 @@ class DatabaseService {
 // 设置版本。它将执行 onCreate 方法，同时提供数据库升级和降级的路径。
         version: 1,
       );
-      databaseService= DatabaseService(db);
+      databaseService = DatabaseService(db);
     }
 
     return databaseService;
@@ -65,21 +66,38 @@ class DatabaseService {
     );
   }
 
-  Future<List<Map<String,dynamic>>> queryRaw(String sql, [List<dynamic> arguments]) async {
+  Future<void> updateRaw(String sql, [List<dynamic> arguments]) async {
+    await _database.rawUpdate(
+      sql,
+      arguments,
+    );
+  }
+
+  Future<void> update(Entity entity) async {
+    await _database.update(
+      entity.getTableName(),
+      entity.toMap(),
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> queryRaw(String sql,
+      [List<dynamic> arguments]) async {
     return await _database.rawQuery(
       sql,
       arguments,
     );
   }
 
-  Future<List<T>> queryAll<T extends Entity>(String tableName,MapFunction<T> mapFunc) async {
+  Future<List<T>> queryAll<T extends Entity>(
+      String tableName, MapFunction<T> mapFunc) async {
     final List<Map<String, dynamic>> maps = await _database.query(tableName);
     return List.generate(maps.length, (i) {
       return mapFunc(maps[i]);
     });
   }
 
-  Future<void> delete(String tableName,String where,List<dynamic> args) async {
-    await _database.delete(tableName,where:where,whereArgs: args);
+  Future<void> delete(
+      String tableName, String where, List<dynamic> args) async {
+    await _database.delete(tableName, where: where, whereArgs: args);
   }
 }

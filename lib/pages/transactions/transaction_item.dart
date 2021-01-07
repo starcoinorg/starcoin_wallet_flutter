@@ -17,6 +17,7 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(transactionWithInfo.toString());
     return Padding(
         padding: const EdgeInsets.only(top: 2, bottom: 2),
         child: InkWell(
@@ -35,8 +36,8 @@ class TransactionItem extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Text("Sender: "),
-                    Text(
-                        WalletUtil.getShortAddress("${transactionWithInfo.txn['UserTransaction']['authenticator']['Ed25519']['public_key']}"))
+                    Text(WalletUtil.getShortAddress(
+                        "${transactionWithInfo.txn['user_transaction']['authenticator']['Ed25519']['public_key']}"))
                   ],
                 ),
                 SizedBox(height: 5),
@@ -49,7 +50,7 @@ class TransactionItem extends StatelessWidget {
                             children: <Widget>[
                           Text("Transaction Number: "),
                           Text(
-                              "${transactionWithInfo.txn['UserTransaction']['raw_txn']['sequence_number']}")
+                              "${transactionWithInfo.txn['user_transaction']['raw_txn']['sequence_number']}")
                         ])),
                     new Padding(
                       padding: EdgeInsets.only(right: Dimens.padding),

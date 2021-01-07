@@ -7,26 +7,39 @@ import 'package:stcerwallet/service/database_service.dart';
 
 class ScWallet extends Entity {
   static final String tableName = "seeds";
+  static final int DEFAULT = 1;
 
   Wallet wallet;
-  List<Account> _accounts;
+  List<Account> accounts;
   int _addressCount;
-  bool _isDefault;
+  int _isDefault;
   int _currentAccount;
   String _seed;
 
-  ScWallet(this._accounts, this._addressCount, this._isDefault,
+  ScWallet(this.accounts, this._addressCount, this._isDefault,
       this._currentAccount, this._seed) {
     this.wallet = Wallet(mnemonic: this._seed);
   }
 
+  ScWallet.initAccount(this._isDefault, this._seed) {
+    this.wallet = Wallet(mnemonic: this._seed, salt: 'STARCOIN');
+    Account account = this.wallet.newAccount();
+    this._addressCount = 1;
+    this._currentAccount = 0;
+    this.accounts = [account];
+  }
+
+  Account defaultAccount() {
+    return accounts[_currentAccount];
+  }
+
   void addAccount() {
     final account = wallet.generateAccount(_addressCount++);
-    this._accounts.add(account);
+    this.accounts.add(account);
   }
 
   void deleteAccount(Account account) {
-    _accounts.remove(account);
+    accounts.remove(account);
   }
 
   @override
@@ -42,10 +55,11 @@ class ScWallet extends Entity {
   @override
   Map<String, dynamic> toMap() {
     final privatekeys =
-        _accounts.map((account) => account.keyPair.getPrivateKeyHex());
+        accounts.map((account) => account.keyPair.getPrivateKeyHex()).toList();
+    final jsonPrivateKeys = jsonEncode(privatekeys);
     return {
       "seed": _seed,
-      "private_keys": jsonEncode(privatekeys),
+      "private_keys": jsonPrivateKeys,
       "address_count": _addressCount,
       "is_default": _isDefault,
       "current_account": _currentAccount,
@@ -54,7 +68,7 @@ class ScWallet extends Entity {
 
   @override
   String toString() {
-    return 'ScWallet{_accounts: $_accounts, _addressCount: $_addressCount, _isDefault: $_isDefault, _currentAccount: $_currentAccount, _seed: $_seed}';
+    return 'ScWallet{_accounts: $accounts, _addressCount: $_addressCount, _isDefault: $_isDefault, _currentAccount: $_currentAccount, _seed: $_seed}';
   }
 
   @override
@@ -63,7 +77,7 @@ class ScWallet extends Entity {
       other is ScWallet &&
           runtimeType == other.runtimeType &&
           wallet == other.wallet &&
-          _accounts == other._accounts &&
+          accounts == other.accounts &&
           _addressCount == other._addressCount &&
           _isDefault == other._isDefault &&
           _currentAccount == other._currentAccount &&
@@ -72,7 +86,7 @@ class ScWallet extends Entity {
   @override
   int get hashCode =>
       wallet.hashCode ^
-      _accounts.hashCode ^
+      accounts.hashCode ^
       _addressCount.hashCode ^
       _isDefault.hashCode ^
       _currentAccount.hashCode ^
@@ -85,7 +99,7 @@ ScWallet mapToScWallet(Map<String, dynamic> record) {
   final isDefault = record['is_default'];
   final currentAccount = record['current_account'];
   final privateKeys = record['private_keys'];
-  final List<String> privatekeysList = jsonDecode(privateKeys);
+  final List<dynamic> privatekeysList = jsonDecode(privateKeys);
   var accounts = privatekeysList
       .map((privateKeyHex) => Account(KeyPair.fromHex(privateKeyHex)))
       .toList();

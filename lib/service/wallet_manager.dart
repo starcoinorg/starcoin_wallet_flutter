@@ -23,6 +23,14 @@ class WalletManager {
     return result;
   }
 
+  Future<void> initWallet(String seed) async {
+    final databaseService = await DatabaseService.getInstance();
+
+    final result = await databaseService
+        .insert(ScWallet.initAccount(ScWallet.DEFAULT, seed));
+    return result;
+  }
+
   void addAccount(int index) async {
     if (index > _wallets.length) {
       return;

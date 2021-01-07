@@ -3,23 +3,41 @@ import 'package:provider/provider.dart';
 import 'package:starcoin_wallet/wallet/account_manager.dart';
 import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
+import 'package:stcerwallet/model/scwallet.dart';
 import 'package:stcerwallet/model/stored_keypair.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stcerwallet/pages/wallet/init/wallet_import_page.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
+import 'package:stcerwallet/service/wallet_manager.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/wallet_item_widget.dart';
 
 class WalletManagePage extends StatelessWidget {
   static const String routeName = Routes.wallet + '/manage';
 
+  Future<List<ScWallet>> getAllWallets() async {
+    return await WalletManager.instance.wallets;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _appBar(context),
-        backgroundColor: Colors.white,
-        body: new ListView(children: _body(context)));
+    return FutureBuilder<List<ScWallet>>(
+        future: getAllWallets(),
+        builder: (context, AsyncSnapshot<List<ScWallet>> snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+                appBar: _appBar(context),
+                backgroundColor: Colors.white,
+                body: new ListView(children: _body(context)));
+          } else {
+            return new Center(
+                child: Text(
+              "Loading",
+              textAlign: TextAlign.center,
+            ));
+          }
+        });
   }
 
   Widget _appBar(BuildContext context) {
@@ -67,7 +85,7 @@ class WalletManagePage extends StatelessWidget {
                   new Padding(
                     padding: EdgeInsets.only(left: 2.0, top: 4.0, bottom: 4.0),
                     child: new Text(
-                      'Records',
+                      'Address',
                       style:
                           TextStyle(fontSize: 12.0, color: theme.primaryColor),
                     ),
@@ -89,7 +107,7 @@ class WalletManagePage extends StatelessWidget {
 
   _body(BuildContext context) {
     final configurationService = Provider.of<ConfigurationService>(context);
-    final keypairs=configurationService.getKeyPairs();
+    final keypairs = configurationService.getKeyPairs();
     List<Widget> list = new List();
     list.add(_bodyLabelMain(context));
     list.add(new Divider(
@@ -97,7 +115,11 @@ class WalletManagePage extends StatelessWidget {
       color: Colors.transparent,
     ));
     for (StoredKeypair keypair in keypairs) {
-      final hdwallet = new HDWallet(name: "wallet",address: keypair.getAddress(),privateKey: keypair.getPrivateKey(),mnemonic: "");
+      final hdwallet = new HDWallet(
+          name: "wallet",
+          address: keypair.getAddress(),
+          privateKey: keypair.getPrivateKey(),
+          mnemonic: "");
       list.add(new WalletItemWidget(
         wallet: hdwallet,
         onMoreTap: () {
@@ -152,10 +174,11 @@ class WalletManagePage extends StatelessWidget {
                 Icons.add,
                 size: 20.0,
               ),
-              onTap: () {
-                final configurationService = Provider.of<ConfigurationService>(context);
-                final wallet = Wallet(mnemonic:configurationService.getEntropyMnemonic());
-
+              onTap: () async {
+                final configurationService =
+                    Provider.of<ConfigurationService>(context);
+                final wallet =
+                    Wallet(mnemonic: configurationService.getEntropyMnemonic());
               },
               borderRadius: BorderRadius.circular(32.0),
             ),

@@ -4,6 +4,7 @@ import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:starcoin_wallet/wallet/helper.dart';
 import 'package:starcoin_wallet/wallet/keypair.dart';
 import 'package:starcoin_wallet/wallet/account_manager.dart';
+import 'package:stcerwallet/service/wallet_manager.dart';
 
 abstract class IAddressService {
   String generateMnemonic();
@@ -29,8 +30,7 @@ class AddressService implements IAddressService {
 
   @override
   String getPrivateKey(String mnemonic) {
-    Wallet wallet =
-        new Wallet(mnemonic: mnemonic, salt: 'STARCOIN');
+    Wallet wallet = new Wallet(mnemonic: mnemonic, salt: 'STARCOIN');
     Account account = wallet.generateAccount(0);
     return Helpers.byteToHex(account.keyPair.getPrivateKey());
   }
@@ -47,14 +47,14 @@ class AddressService implements IAddressService {
   Future<bool> setupFromMnemonic(String mnemonic) async {
     final cryptMnemonic = bip39.mnemonicToEntropy(mnemonic);
 
-    Wallet wallet =
-        new Wallet(mnemonic: cryptMnemonic,  salt: 'STARCOIN');
+    Wallet wallet = new Wallet(mnemonic: cryptMnemonic, salt: 'STARCOIN');
     Account account = wallet.generateAccount(0);
+
+    WalletManager.instance.initWallet(cryptMnemonic);
 
     await _configService.setMnemonic(mnemonic);
     await _configService.setEntropyMnemonic(cryptMnemonic);
-    print(
-        "private key is " + Helpers.byteToHex(account.keyPair.getPrivateKey()));
+
     await _configService
         .setPrivateKey(Helpers.byteToHex(account.keyPair.getPrivateKey()));
     await _configService.setupDone(true);

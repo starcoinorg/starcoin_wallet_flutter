@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:stcerwallet/context/wallet/wallet_handler.dart';
-import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/service/network_manager.dart';
+import 'package:stcerwallet/service/wallet_manager.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/pages/transactions/transaction_item.dart';
 import 'package:starcoin_wallet/wallet/wallet_client.dart';
-import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:optional/optional.dart';
 import 'dart:developer';
 
@@ -25,7 +23,6 @@ class TransactionsPageState extends State<TransactionsPage> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   bool isLoading = false;
-  WalletHandler store;
   bool needInit = true;
   List<TransactionWithInfo> txns;
 
@@ -39,16 +36,8 @@ class TransactionsPageState extends State<TransactionsPage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    setState(() {
-      if (needInit) {
-        store = useWallet(context);
-      }
-      needInit = false;
-      return null;
-    });
-
     return FutureBuilder<List<TransactionWithInfo>>(
-        future: getAccountState(store),
+        future: getAccountState(),
         builder: (context, AsyncSnapshot<List<TransactionWithInfo>> snapshot) {
           if (snapshot.hasData) {
             this.txns = snapshot.data;
@@ -108,19 +97,25 @@ class TransactionsPageState extends State<TransactionsPage> {
         });
   }
 
-  Future<List<TransactionWithInfo>> getAccountState(WalletHandler store) async {
-    final starcoinUrl=NetworkManager.getCurrentNetworkUrl();
+  Future<List<TransactionWithInfo>> getAccountState() async {
+    final starcoinUrl = NetworkManager.getCurrentNetworkUrl();
     final walletClient = new WalletClient(starcoinUrl.httpUrl);
     final batchClient = new BatchClient(starcoinUrl.wsUrl);
     try {
       final nodeInfo = await walletClient.getNodeInfo();
-      var fromBlock = nodeInfo['peer_info']['latest_header']['number'] - 100;
+      var fromBlock =
+          int.parse(nodeInfo['peer_info']['chain_info']['head']['number']) -
+              100;
       if (fromBlock < 0) {
         fromBlock = 0;
       }
+
+      final wallets = await WalletManager.instance.wallets;
+      final wallet = wallets[0];
+
       final txnList = await batchClient.getTxnListBatch(
           walletClient,
-          store.state.account,
+          wallet.defaultAccount(),
           Optional.of(fromBlock),
           Optional.empty(),
           Optional.empty());
@@ -137,7 +132,7 @@ class TransactionsPageState extends State<TransactionsPage> {
       setState(() {
         isLoading = true;
       });
-      final txnList = await getAccountState(this.store);
+      final txnList = await getAccountState();
       setState(() {
         this.txns = txnList;
       });
@@ -155,7 +150,7 @@ class TransactionsPageState extends State<TransactionsPage> {
       setState(() {
         isLoading = true;
       });
-      final txnList = await getAccountState(this.store);
+      final txnList = await getAccountState();
       setState(() {
         this.txns = txnList;
       });

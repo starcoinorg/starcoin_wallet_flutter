@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
-import 'package:stcerwallet/context/wallet/wallet_handler.dart';
 import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
 import 'package:stcerwallet/model/assets.dart';
@@ -16,6 +15,7 @@ import 'package:stcerwallet/pages/wallet/wallet_manage_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_transfer_page.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/service/network_manager.dart';
+import 'package:stcerwallet/service/wallet_manager.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/token_item_widget.dart';
 import 'package:stcerwallet/view/wallet_widget.dart';
@@ -29,8 +29,6 @@ class WalletPage extends HookWidget {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
-  static bool inited = false;
-
   ConfigurationService configurationService;
 
   final List<Assets> _assets = [
@@ -42,16 +40,11 @@ class WalletPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     //final ThemeData theme = Theme.of(context);
-    final store = useWallet(context);
+    final _store = useWallet(context);
     configurationService = Provider.of<ConfigurationService>(context);
 
-    if (inited == false) {
-      store.initialise();
-      inited = true;
-    }
-
     return FutureBuilder<AccountState>(
-        future: getAccountState(store),
+        future: getAccountState(),
         builder: (context, AsyncSnapshot<AccountState> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
@@ -90,12 +83,24 @@ class WalletPage extends HookWidget {
     });
   }
 
-  Future<AccountState> getAccountState(WalletHandler store) async {
-    final address = store.state.address;
-    final publicKey = store.state.account.keyPair.getPublicKeyHex();
+  Future<AccountState> getAccountState() async {
+    final wallets = await WalletManager.instance.wallets;
+    final wallet = wallets[0];
+    //final address = store.state.address;
+    //final publicKey = store.state.account.keyPair.getPublicKeyHex();
+    final address = wallet.defaultAccount().getAddress();
+    final publicKey = wallet.defaultAccount().keyPair.getPublicKeyHex();
+
+    log("public key is " + wallet.defaultAccount().keyPair.getPublicKeyHex());
+    log("private key is " + wallet.defaultAccount().keyPair.getPrivateKeyHex());
+    log("address is " + wallet.defaultAccount().getAddress());
 
     try {
-      final stcBalance = await store.state.account.balanceOfStc(NetworkManager.getCurrentNetworkUrl().httpUrl);
+//      final stcBalance = await store.state.account
+//          .balanceOfStc(NetworkManager.getCurrentNetworkUrl().httpUrl);
+      final stcBalance = await wallet
+          .defaultAccount()
+          .balanceOfStc(NetworkManager.getCurrentNetworkUrl().httpUrl);
 
       return AccountState(
           balance: stcBalance.toBigInt(),

@@ -49,9 +49,9 @@ dependencies:
   path: 1.8.0-nullsafety.3
   flutter_slidable: 0.5.7
   starcoin_wallet:
-    #git:
-    #  url: git://github.com/starcoinorg/starcoin.dart
-    path: /Users/fanngyuan/Documents/workspace/starcoin_wallet.dart
+    git:
+      url: git://github.com/starcoinorg/starcoin.dart
+    # path: /Users/fanngyuan/Documents/workspace/starcoin_wallet.dart
 
 dev_dependencies:
   flutter_test:

@@ -17,7 +17,6 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(transactionWithInfo.toString());
     return Padding(
         padding: const EdgeInsets.only(top: 2, bottom: 2),
         child: InkWell(

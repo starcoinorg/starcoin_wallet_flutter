@@ -206,6 +206,8 @@ class WalletPage extends HookWidget {
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
           return new SpecificWalletManagePage(
             wallet: scwallet,
+            account: scwallet.defaultAccount(),
+            isDefault: true,
           );
         }));
       },

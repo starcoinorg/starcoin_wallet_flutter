@@ -37,6 +37,14 @@ class ScWallet extends Entity {
     return accounts[_currentAccount];
   }
 
+  void setDefaultAccount(Account account) {
+    for (int i = 0; i < accounts.length; i++) {
+      if (account == accounts[i]) {
+        this._currentAccount = i;
+      }
+    }
+  }
+
   void addAccount() {
     final account = wallet.generateAccount(_addressCount++);
     this.accounts.add(account);

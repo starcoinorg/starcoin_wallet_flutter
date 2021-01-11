@@ -42,6 +42,17 @@ class WalletManager {
     await databaseService.update(wallet);
   }
 
+  void setDefaultAccount(int walletIndex, Account account) async {
+    if (walletIndex > _wallets.length) {
+      return;
+    }
+    final wallet = _wallets[walletIndex];
+    wallet.setDefaultAccount(account);
+
+    final databaseService = await DatabaseService.getInstance();
+    await databaseService.update(wallet);
+  }
+
   void deleteAccount(int index, Account account) async {
     if (index > _wallets.length) {
       return;

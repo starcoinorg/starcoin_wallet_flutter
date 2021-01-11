@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:stcerwallet/components/wallet/export_page.dart';
 import 'package:stcerwallet/model/scwallet.dart';
+import 'package:stcerwallet/service/wallet_manager.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/list/list_item_widget.dart';
 
@@ -8,8 +10,10 @@ class SpecificWalletManagePage extends StatelessWidget {
 //  static const String routeName = Routes.wallet + '/manage';
 
   final ScWallet wallet;
+  final Account account;
+  final bool isDefault;
 
-  SpecificWalletManagePage({this.wallet});
+  SpecificWalletManagePage({this.wallet, this.account, this.isDefault});
 
   @override
   Widget build(BuildContext context) {
@@ -42,56 +46,65 @@ class SpecificWalletManagePage extends StatelessWidget {
 
   _body(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return Column(
-      children: <Widget>[
-        _bodyWallet(context),
-        Divider(
-          color: theme.dividerColor,
-          height: Dimens.line,
-        ),
-        Divider(
-          height: Dimens.divider,
-          color: Colors.transparent,
-        ),
-        Divider(
-          color: theme.dividerColor,
-          height: Dimens.line,
-        ),
-        new ListItemWidget(
-          iconData: Icons.import_export,
-          title: 'Export Mnemonic',
-          onTapCallback: () {
-            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-              return new ExportPage(
-                content: wallet.getMnemonic(),
-                title: "Export Mnemonic",
-              );
-            }));
-          },
-          bottomLineType: BottomLineType.Gap,
-        ),
-        // new ListItemWidget(
-        //   iconData: Icons.folder,
-        //   title: 'Export Keystore',
-        //   onTapCallback: () {},
-        //   bottomLineType: BottomLineType.Gap,
-        // ),
-        new ListItemWidget(
-          iconData: Icons.vpn_key,
-          title: 'Export Private Key',
-          onTapCallback: () {
-            Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-              return new ExportPage(
-                content:
-                    "0x" + wallet.defaultAccount().keyPair.getPrivateKeyHex(),
-                title: "Export Private Key",
-              );
-            }));
-          },
-          bottomLineType: BottomLineType.None,
-        ),
-      ],
+    var bottomLineType = BottomLineType.Gap;
+    if (isDefault) {
+      bottomLineType = BottomLineType.None;
+    }
+    final exportPk = new ListItemWidget(
+      iconData: Icons.vpn_key,
+      title: 'Export Private Key',
+      onTapCallback: () {
+        Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+          return new ExportPage(
+            content: "0x" + wallet.defaultAccount().keyPair.getPrivateKeyHex(),
+            title: "Export Private Key",
+          );
+        }));
+      },
+      bottomLineType: bottomLineType,
     );
+
+    var widgets = <Widget>[
+      _bodyWallet(context),
+      Divider(
+        color: theme.dividerColor,
+        height: Dimens.line,
+      ),
+      Divider(
+        height: Dimens.divider,
+        color: Colors.transparent,
+      ),
+      Divider(
+        color: theme.dividerColor,
+        height: Dimens.line,
+      ),
+      new ListItemWidget(
+        iconData: Icons.import_export,
+        title: 'Export Mnemonic',
+        onTapCallback: () {
+          Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+            return new ExportPage(
+              content: wallet.getMnemonic(),
+              title: "Export Mnemonic",
+            );
+          }));
+        },
+        bottomLineType: BottomLineType.Gap,
+      ),
+      exportPk
+    ];
+    if (!isDefault) {
+      widgets.add(new ListItemWidget(
+        iconData: Icons.wallet_travel,
+        title: 'Set As Default Address',
+        onTapCallback: () async {
+          await WalletManager.instance.setDefaultAccount(0, account);
+        },
+        bottomLineType: BottomLineType.None,
+        withArrow: false,
+      ));
+    }
+    return Column(children: widgets);
   }
 
   _bodyWallet(BuildContext context) {
@@ -116,7 +129,7 @@ class SpecificWalletManagePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 new Text('STC-Wallet'),
-                new Text(wallet.defaultAccount().getAddress())
+                new Text(account.getAddress())
               ],
             )),
             // new Padding(

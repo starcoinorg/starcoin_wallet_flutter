@@ -130,8 +130,14 @@ class WalletManagePageState extends State<WalletManagePage> {
         wallet: hdwallet,
         onMoreTap: () async {
           Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+            bool isDefault = false;
+            if (account == wallet.defaultAccount()) {
+              isDefault = true;
+            }
             return new SpecificWalletManagePage(
               wallet: wallet,
+              account: account,
+              isDefault: isDefault,
             );
           }));
         },

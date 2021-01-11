@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:stcerwallet/components/wallet/export_page.dart';
-import 'package:stcerwallet/model/hdwallet.dart';
+import 'package:stcerwallet/model/scwallet.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/list/list_item_widget.dart';
 
 class SpecificWalletManagePage extends StatelessWidget {
 //  static const String routeName = Routes.wallet + '/manage';
 
-  final HDWallet wallet;
+  final ScWallet wallet;
 
   SpecificWalletManagePage({this.wallet});
 
@@ -63,7 +63,7 @@ class SpecificWalletManagePage extends StatelessWidget {
           onTapCallback: () {
             Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
               return new ExportPage(
-                content: wallet.mnemonic,
+                content: wallet.getMnemonic(),
                 title: "Export Mnemonic",
               );
             }));
@@ -82,7 +82,8 @@ class SpecificWalletManagePage extends StatelessWidget {
           onTapCallback: () {
             Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
               return new ExportPage(
-                content: "0x" + wallet.privateKey,
+                content:
+                    "0x" + wallet.defaultAccount().keyPair.getPrivateKeyHex(),
                 title: "Export Private Key",
               );
             }));
@@ -115,7 +116,7 @@ class SpecificWalletManagePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 new Text('STC-Wallet'),
-                new Text(wallet.address)
+                new Text(wallet.defaultAccount().getAddress())
               ],
             )),
             // new Padding(

@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:starcoin_wallet/wallet/account_manager.dart';
+import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/model/scwallet.dart';
-import 'package:stcerwallet/model/stored_keypair.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stcerwallet/pages/wallet/init/wallet_import_page.dart';
-import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/service/wallet_manager.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/wallet_item_widget.dart';
 
-class WalletManagePage extends StatelessWidget {
+class WalletManagePage extends StatefulWidget {
+  @override
+  State<WalletManagePage> createState() {
+    return WalletManagePageState();
+  }
+
   static const String routeName = Routes.wallet + '/manage';
+}
+
+class WalletManagePageState extends State<WalletManagePage> {
+  bool reload = false;
 
   Future<List<ScWallet>> getAllWallets() async {
     return await WalletManager.instance.wallets;
@@ -29,7 +35,7 @@ class WalletManagePage extends StatelessWidget {
             return Scaffold(
                 appBar: _appBar(context),
                 backgroundColor: Colors.white,
-                body: new ListView(children: _body(context)));
+                body: new ListView(children: _body(context, snapshot.data)));
           } else {
             return new Center(
                 child: Text(
@@ -105,27 +111,27 @@ class WalletManagePage extends StatelessWidget {
     );
   }
 
-  _body(BuildContext context) {
-    final configurationService = Provider.of<ConfigurationService>(context);
-    final keypairs = configurationService.getKeyPairs();
+  _body(BuildContext context, List<ScWallet> wallets) {
+    final wallet = wallets[0];
     List<Widget> list = new List();
     list.add(_bodyLabelMain(context));
     list.add(new Divider(
       height: 10.0,
       color: Colors.transparent,
     ));
-    for (StoredKeypair keypair in keypairs) {
+
+    for (Account account in wallet.accounts) {
       final hdwallet = new HDWallet(
           name: "wallet",
-          address: keypair.getAddress(),
-          privateKey: keypair.getPrivateKey(),
+          address: account.getAddress(),
+          privateKey: account.keyPair.getPrivateKeyHex(),
           mnemonic: "");
       list.add(new WalletItemWidget(
         wallet: hdwallet,
-        onMoreTap: () {
+        onMoreTap: () async {
           Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
             return new SpecificWalletManagePage(
-              wallet: hdwallet,
+              wallet: wallet,
             );
           }));
         },
@@ -175,10 +181,10 @@ class WalletManagePage extends StatelessWidget {
                 size: 20.0,
               ),
               onTap: () async {
-                final configurationService =
-                    Provider.of<ConfigurationService>(context);
-                final wallet =
-                    Wallet(mnemonic: configurationService.getEntropyMnemonic());
+                await WalletManager.instance.addAccount(0);
+                setState(() {
+                  this.reload = true;
+                });
               },
               borderRadius: BorderRadius.circular(32.0),
             ),

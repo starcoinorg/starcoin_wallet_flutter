@@ -198,12 +198,14 @@ class WalletPage extends HookWidget {
     wallet.name = "STC Wallet";
     Widget currentWalletWidget = new WalletWidget(
       wallet: wallet,
-      onMoreTap: () {
+      onMoreTap: () async {
         wallet.mnemonic = configurationService.getMnemonic();
         wallet.privateKey = configurationService.getPrivateKey();
+        final scwallets = await WalletManager.instance.wallets;
+        final scwallet = scwallets[0];
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
           return new SpecificWalletManagePage(
-            wallet: wallet,
+            wallet: scwallet,
           );
         }));
       },

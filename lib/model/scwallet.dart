@@ -29,6 +29,10 @@ class ScWallet extends Entity {
     this.accounts = [account];
   }
 
+  String getMnemonic() {
+    return _seed;
+  }
+
   Account defaultAccount() {
     return accounts[_currentAccount];
   }

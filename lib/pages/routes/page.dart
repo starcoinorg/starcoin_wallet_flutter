@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:stcerwallet/context/setup/wallet_setup_provider.dart';
 import 'package:stcerwallet/context/transfer/wallet_transfer_provider.dart';
 import 'package:stcerwallet/pages/profile/about_page.dart';
-import 'package:stcerwallet/pages/profile/network_settings_page.dart';
 import 'package:stcerwallet/pages/profile_page.dart';
 import 'package:stcerwallet/pages/transactions/transaction_detail.dart';
 import 'package:stcerwallet/pages/wallet/init/identity_init_page.dart';
@@ -77,14 +76,10 @@ List<Page> _buildPages() {
               return WalletCreatePage("Create Wallet");
             })),
     new Page(
-        routeName: WalletTransferPage.routeName,
-        buildRoute: (BuildContext context) =>
-            WalletTransferProvider(builder: (context, store) {
-              return WalletTransferPage(title: "Send Tokens");
-            })),
-    new Page(
         routeName: TransactionDetailPage.routeName,
-        buildRoute: (BuildContext context) => new TransactionDetailPage(title: "Transaction Detail",)),
+        buildRoute: (BuildContext context) => new TransactionDetailPage(
+              title: "Transaction Detail",
+            )),
   ];
   if (Platform.isIOS || Platform.isAndroid) {
     pages.add(new Page(

@@ -3,9 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'package:starcoin_wallet/starcoin/starcoin.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
+import 'package:stcerwallet/context/transfer/wallet_transfer_provider.dart';
 import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
@@ -163,11 +164,16 @@ class WalletPage extends HookWidget {
           }),
       actions: <Widget>[
         new IconButton(
-          icon: Icon(Icons.send, color: theme.iconTheme.color),
-          onPressed: () {
-            Navigator.of(context).pushNamed(WalletTransferPage.routeName);
-          },
-        ),
+            icon: Icon(Icons.send, color: theme.iconTheme.color),
+            onPressed: () {
+              Navigator.of(context).push(new MaterialPageRoute(
+                builder: (context) {
+                  return WalletTransferProvider(builder: (context, store) {
+                    return WalletTransferPage("Send Tokens", state.assets);
+                  });
+                },
+              ));
+            }),
       ],
       title: new InkWell(
         child: coinTypeWidget,

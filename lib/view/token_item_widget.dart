@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:starcoin_wallet/starcoin/starcoin.dart';
 import 'package:stcerwallet/style/styles.dart';
+import 'package:stcerwallet/util/wallet_util.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 
 class TokenItemWidget extends StatelessWidget {
@@ -33,8 +34,7 @@ class TokenItemWidget extends StatelessWidget {
                 new Expanded(
                     child: new Padding(
                   padding: EdgeInsets.only(left: 8.0),
-                  child: new Text(
-                      "${tokenType.value.address.toString()}::${tokenType.value.module.value}::${tokenType.value.name.value}"),
+                  child: new Text(WalletUtil.formatTokenStructTag(tokenType)),
                 )),
                 new Container(
                   padding: new EdgeInsets.only(right: 16.0),

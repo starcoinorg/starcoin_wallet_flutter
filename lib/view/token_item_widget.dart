@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:stcerwallet/model/assets.dart';
+import 'package:starcoin_wallet/starcoin/starcoin.dart';
 import 'package:stcerwallet/style/styles.dart';
+import 'package:starcoin_wallet/wallet/account.dart';
 
 class TokenItemWidget extends StatelessWidget {
-  final Assets _assets;
+  final TokenBalance _asset;
 
-  TokenItemWidget(this._assets);
+  TokenItemWidget(this._asset);
 
   @override
   Widget build(BuildContext context) {
     //final ThemeData theme = Theme.of(context);
     final tokenIconSize = 40.0;
+    final tokenType = _asset.token.type_params[0] as TypeTagStructItem;
     return new InkWell(
       child: new Ink(
         height: 72.0,
@@ -29,24 +31,25 @@ class TokenItemWidget extends StatelessWidget {
                   ),
                 ),
                 new Expanded(
-                  child: new Padding(padding: EdgeInsets.only(left: 8.0),child: new Text('0.01449'),)
-                ),
+                    child: new Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                      "${tokenType.value.address.toString()}::${tokenType.value.module.value}::${tokenType.value.name.value}"),
+                )),
                 new Container(
                   padding: new EdgeInsets.only(right: 16.0),
                   child: new Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      new Text('0.01449'),
-                      new Text('\$ 25.87')
+                      new Text(_asset.balance.toString()),
                     ],
                   ),
                 )
               ],
             ),
             new Container(
-              child: Divider(
-                  height: Dimens.line, indent: 16.0),
+              child: Divider(height: Dimens.line, indent: 16.0),
               alignment: Alignment.bottomCenter,
             )
           ],

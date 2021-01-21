@@ -33,8 +33,7 @@ class WalletTransferHandler {
     _store.dispatch(WalletTransferStarted());
 
     try {
-      var account =
-          Account.fromPrivateKey(Helpers.hexToBytes(privateKey));
+      var account = Account.fromPrivateKey(Helpers.hexToBytes(privateKey));
       await account.transferSTC(
           NetworkManager.getCurrentNetworkUrl().httpUrl,
           Int128(0, int.parse(amount)),
@@ -70,11 +69,11 @@ class WalletTransferHandler {
     _store.dispatch(WalletTransferStarted());
 
     try {
-      var account =
-          Account.fromPrivateKey(Helpers.hexToBytes(privateKey));
+      var account = Account.fromPrivateKey(Helpers.hexToBytes(privateKey));
       final payloadLcs = Helpers.hexToBytes(payloadHex);
-      final payload = TransactionPayload.lcsDeserialize(payloadLcs);
-      await account.sendTransaction(NetworkManager.getCurrentNetworkUrl().httpUrl,payload);
+      final payload = TransactionPayload.bcsDeserialize(payloadLcs);
+      await account.sendTransaction(
+          NetworkManager.getCurrentNetworkUrl().httpUrl, payload);
       completer.complete(true);
     } catch (ex) {
       log(ex);

@@ -31,8 +31,9 @@ class WalletTransactionPayloadPage extends HookWidget {
             final privateKey = Helpers.hexToBytes(privateKeyString);
             final account = Account.fromPrivateKey(privateKey);
             final payloadLcs = Helpers.hexToBytes(payloadHex);
-            final payload = TransactionPayload.lcsDeserialize(payloadLcs);
-            await account.sendTransaction(NetworkManager.getCurrentNetworkUrl().httpUrl,payload);
+            final payload = TransactionPayload.bcsDeserialize(payloadLcs);
+            await account.sendTransaction(
+                NetworkManager.getCurrentNetworkUrl().httpUrl, payload);
           } catch (ex) {
             log(ex.toString());
           }

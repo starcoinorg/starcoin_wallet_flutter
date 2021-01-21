@@ -4,10 +4,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
+import 'package:starcoin_wallet/starcoin/starcoin.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:stcerwallet/context/wallet/wallet_provider.dart';
 import 'package:stcerwallet/manager/specific_wallet_manage_page.dart';
-import 'package:stcerwallet/model/assets.dart';
 import 'package:stcerwallet/model/hdwallet.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/pages/wallet/receive_page.dart';
@@ -30,12 +30,6 @@ class WalletPage extends HookWidget {
       new GlobalKey<ScaffoldState>();
 
   ConfigurationService configurationService;
-
-  final List<Assets> _assets = [
-    Assets(),
-    Assets(),
-    Assets(),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -102,18 +96,24 @@ class WalletPage extends HookWidget {
           .defaultAccount()
           .balanceOfStc(NetworkManager.getCurrentNetworkUrl().httpUrl);
 
+      final tokenList = await wallet
+          .defaultAccount()
+          .getAccountToken(NetworkManager.getCurrentNetworkUrl().httpUrl);
+
       return AccountState(
           balance: stcBalance.toBigInt(),
           sequenceNumber: BigInt.zero,
           address: address,
-          publicKey: "0x" + publicKey);
+          publicKey: "0x" + publicKey,
+          assets: tokenList);
     } catch (ex) {
       log(ex.toString());
       return AccountState(
           balance: BigInt.zero,
           sequenceNumber: BigInt.zero,
           address: address,
-          publicKey: "0x" + publicKey);
+          publicKey: "0x" + publicKey,
+          assets: []);
     }
   }
 
@@ -217,8 +217,8 @@ class WalletPage extends HookWidget {
 
     list.add(currentWalletWidget);
     list.add(assetsMarkWidget);
-    List<Widget> assetsWidgetList = _assets.map<Widget>((assets) {
-      return new TokenItemWidget(assets);
+    List<Widget> assetsWidgetList = state.assets.map<Widget>((asset) {
+      return new TokenItemWidget(asset);
     }).toList();
     list.addAll(assetsWidgetList);
     return list;

@@ -83,8 +83,9 @@ class StcWebViewState extends State<StcWebView> {
             final privateKey = Helpers.hexToBytes(privateKeyHex);
             final account = Account.fromPrivateKey(privateKey);
             final payloadLcs = Helpers.hexToBytes(message.message);
-            final payload = TransactionPayload.lcsDeserialize(payloadLcs);
-            final result = await account.sendTransaction(NetworkManager.getCurrentNetworkUrl().httpUrl,payload);
+            final payload = TransactionPayload.bcsDeserialize(payloadLcs);
+            final result = await account.sendTransaction(
+                NetworkManager.getCurrentNetworkUrl().httpUrl, payload);
             final txnHashFunction = "pushTxnHash('" + result.txnHash + "');";
             _webViewController.evaluateJavascript(txnHashFunction);
           } catch (ex) {

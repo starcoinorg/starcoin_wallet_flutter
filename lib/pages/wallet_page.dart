@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:starcoin_wallet/wallet/account.dart';
 import 'package:stcerwallet/context/transfer/wallet_transfer_provider.dart';

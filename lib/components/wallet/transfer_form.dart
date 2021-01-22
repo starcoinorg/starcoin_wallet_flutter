@@ -17,7 +17,8 @@ class TransferForm extends HookWidget {
   final String address;
   final String publicKey;
   final List<TokenBalance> tokens;
-  final void Function(String address, String publicKey, String amount) onSubmit;
+  final void Function(String address, String publicKey, String amount,
+      TokenBalance tokenBalance) onSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -53,23 +54,36 @@ class TransferForm extends HookWidget {
                 child: const Text('Transfer now'),
                 onPressed: () {
                   this.onSubmit(
-                    toController.value.text,
-                    toPublickeyController.value.text,
-                    amountController.value.text,
-                  );
+                      toController.value.text,
+                      toPublickeyController.value.text,
+                      amountController.value.text,
+                      tokens[choosedToken]);
                 },
               )
             ],
             children: <Widget>[
-              //PaperValidationSummary(null),
-              DropdownButton(
-                value: choosedToken,
-                onChanged: (int newVal) {
-                  useEffect(() {
-                    choosedToken = newVal;
-                  });
-                },
-                items: tokenDropdownList,
+              ListTile(
+                title: Text("Select Token "),
+                trailing: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    isExpanded: false,
+                    value: choosedToken,
+                    items: tokenDropdownList,
+                    onChanged: (value) {
+                      choosedToken = value;
+                    },
+                    hint: Container(
+                      width: 150, //and here
+                      child: Text(
+                        "Select Token Type",
+                        style: TextStyle(color: Colors.grey),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                    style: TextStyle(
+                        color: Colors.black, decorationColor: Colors.red),
+                  ),
+                ),
               ),
               PaperInput(
                 controller: toController,

@@ -3,17 +3,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:stcerwallet/manager/wallet_initialzer.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
-import 'package:stcerwallet/pages/wallet/init/wallet_create_result_page.dart';
+import 'package:stcerwallet/pages/wallet/init/wallet_account_create_result_page.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/password_inputfield.dart';
 import 'package:stcerwallet/view/status_widget.dart';
 
-class WalletCreatePage extends StatefulWidget {
+class WalletAccountCreatePage extends StatefulWidget {
   static const String routeName = Routes.main + '/create';
 
   @override
   State createState() {
-    return new _WalletCreateState();
+    return new _WalletAccountCreateState();
   }
 }
 
@@ -34,7 +34,7 @@ class _CreateFormData {
   }
 }
 
-class _WalletCreateState extends State<WalletCreatePage> {
+class _WalletAccountCreateState extends State<WalletAccountCreatePage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -154,34 +154,29 @@ class _WalletCreateState extends State<WalletCreatePage> {
     }
 
     return await showDialog<bool>(
-        context: context,
-        builder: (BuildContext context) {
-          return new AlertDialog(
-            title: const Text('This form has errors'),
-            content: const Text('Really leave this form?'),
-            actions: <Widget>[
-              new FlatButton(
-                child: const Text('YES'),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-              new FlatButton(
-                child: const Text('NO'),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              ),
-            ],
-          );
-        }) ??
+            context: context,
+            builder: (BuildContext context) {
+              return new AlertDialog(
+                title: const Text('This form has errors'),
+                content: const Text('Really leave this form?'),
+                actions: <Widget>[
+                  new FlatButton(
+                    child: const Text('YES'),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                  ),
+                  new FlatButton(
+                    child: const Text('NO'),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                ],
+              );
+            }) ??
         false;
   }
-
-//  Future getWallet(String name, String password) async {
-//    return await WalletInitializer.generateWallet(
-//        password: password, name: name);
-//  }
 
   _handleCreateWallet() async {
     //todo 校验
@@ -189,9 +184,10 @@ class _WalletCreateState extends State<WalletCreatePage> {
     String name = _formData.name;
     print("before:${new DateTime.now()}\n");
 
-    final wallet =await WalletInitializer.generateWallet(password: password, name: name);
-    Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-     return WalletCreateResultPage(wallet);
-    }));
+    // final wallet =
+    //     await WalletInitializer.generateWallet(password: password, name: name);
+    // Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+    //   return WalletCreateResultPage(wallet);
+    // }));
   }
 }

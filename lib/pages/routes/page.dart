@@ -6,6 +6,7 @@ import 'package:stcerwallet/pages/profile/about_page.dart';
 import 'package:stcerwallet/pages/profile_page.dart';
 import 'package:stcerwallet/pages/transactions/transaction_detail.dart';
 import 'package:stcerwallet/pages/wallet/init/identity_init_page.dart';
+import 'package:stcerwallet/pages/wallet/init/wallet_account_create_page.dart';
 import 'package:stcerwallet/pages/wallet/qrcode_reader_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_import_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_manage_page.dart';
@@ -80,6 +81,9 @@ List<Page> _buildPages() {
         buildRoute: (BuildContext context) => new TransactionDetailPage(
               title: "Transaction Detail",
             )),
+    new Page(
+        routeName: WalletAccountCreatePage.routeName,
+        buildRoute: (BuildContext context) => new WalletAccountCreatePage()),
   ];
   if (Platform.isIOS || Platform.isAndroid) {
     pages.add(new Page(

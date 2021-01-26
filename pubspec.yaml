@@ -48,10 +48,11 @@ dependencies:
   sqflite: ^1.3.0
   path: 1.8.0-nullsafety.3
   flutter_slidable: 0.5.7
+  encrypt: 4.0.3
   starcoin_wallet:
-    git:
-      url: git://github.com/starcoinorg/starcoin.dart
-    # path: /Users/fanngyuan/Documents/workspace/starcoin_wallet.dart
+    #git:
+    #  url: git://github.com/starcoinorg/starcoin.dart
+    path: /Users/fanngyuan/Documents/workspace/starcoin_wallet.dart
 
 dev_dependencies:
   flutter_test:

@@ -231,7 +231,8 @@ class WalletManagePageState extends State<WalletManagePage> {
                 size: 20.0,
               ),
               onTap: () {
-                Navigator.of(context).pushNamed(WalletImportPage.routeName);
+                Navigator.of(context)
+                    .pushNamed(WalletAccountImportPage.routeName);
               },
               borderRadius: BorderRadius.circular(32.0),
             ),

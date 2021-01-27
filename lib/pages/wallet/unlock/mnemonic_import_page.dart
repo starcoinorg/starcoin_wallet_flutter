@@ -6,7 +6,8 @@ import 'package:stcerwallet/view/password_inputfield.dart';
 class MnemonicImportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new SafeArea(child: new Column(
+    return new SafeArea(
+        child: new Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         _bodyTips(context),
@@ -14,6 +15,7 @@ class MnemonicImportPage extends StatelessWidget {
           height: Dimens.line,
         ),
         _bodyMnemonic(context),
+        _bodyIdentityName(context),
         _bodyPassword(context),
         _bodyRePassword(context),
         new Container(
@@ -42,6 +44,22 @@ class MnemonicImportPage extends StatelessWidget {
       child: new Text(
         'You may reset the wallet password after importing with Mnemonic Phrase',
         style: new TextStyle(fontSize: 14.0, color: theme.primaryColor),
+      ),
+    );
+  }
+
+  _bodyIdentityName(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return new Container(
+      margin: EdgeInsets.symmetric(horizontal: Dimens.padding, vertical: 0.0),
+      child: new Theme(
+        data: theme.copyWith(primaryColor: theme.dividerColor),
+        child: new TextFormField(
+          decoration: new InputDecoration(hintText: 'Identity Name'),
+          onSaved: (value) {
+            //this._formData.name = value;
+          },
+        ),
       ),
     );
   }

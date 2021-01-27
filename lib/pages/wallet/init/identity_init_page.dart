@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/pages/wallet/init/wallet_account_create_page.dart';
+import 'package:stcerwallet/pages/wallet/init/wallet_account_import_page.dart';
 import 'package:stcerwallet/style/styles.dart';
 
 class IdentityInitPage extends StatelessWidget {
@@ -87,7 +88,10 @@ class IdentityInitPage extends StatelessWidget {
           new Padding(
             padding: EdgeInsets.symmetric(horizontal: Dimens.padding * 2),
             child: new FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(WalletAccountImportPage.routeName);
+                },
                 child: new Container(
                   child: new Text('Recover Identity'),
                   alignment: Alignment.center,

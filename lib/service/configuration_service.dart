@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stcerwallet/model/identity.dart';
 import 'package:stcerwallet/model/stored_keypair.dart';
 
 abstract class IConfigurationService {
@@ -15,6 +16,8 @@ abstract class IConfigurationService {
   bool didSetupWallet();
   String getEntropyMnemonic();
   List<StoredKeypair> getKeyPairs();
+  Future<void> setIdentity(Identity value);
+  Identity getIdentity();
 }
 
 class ConfigurationService implements IConfigurationService {
@@ -63,29 +66,42 @@ class ConfigurationService implements IConfigurationService {
   }
 
   @override
-  Future<void> setKeyPairs(List<StoredKeypair> value) async{
+  Future<void> setKeyPairs(List<StoredKeypair> value) async {
     await _preferences.setString("keypairs", jsonEncode(value));
   }
 
   @override
-  List<StoredKeypair> getKeyPairs(){
+  List<StoredKeypair> getKeyPairs() {
     final keypairString = _preferences.getString("keypairs");
-    if(keypairString!=null){
+    if (keypairString != null) {
       return jsonDecode(keypairString);
-    }else{
+    } else {
       return List();
     }
   }
 
   @override
-  Future<void> addKeyPair(StoredKeypair value) async{
-    var keypairs=getKeyPairs();
-    for(StoredKeypair keypair in keypairs){
-      if(keypair==value){
-        return ;
+  Future<void> addKeyPair(StoredKeypair value) async {
+    var keypairs = getKeyPairs();
+    for (StoredKeypair keypair in keypairs) {
+      if (keypair == value) {
+        return;
       }
     }
     keypairs.add(value);
     await setKeyPairs(keypairs);
+  }
+
+  Future<void> setIdentity(Identity value) async {
+    await _preferences.setString("identity_name", jsonEncode(value));
+  }
+
+  Identity getIdentity() {
+    final identityJson = _preferences.getString("identity_name");
+    if (identityJson != null) {
+      return jsonDecode(identityJson);
+    } else {
+      return null;
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:provider/provider.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
 
 import '../hook_provider.dart';
 
@@ -20,9 +21,10 @@ class WalletSetupProvider extends ContextProviderWidget<WalletSetupHandler> {
         initialState: WalletSetup());
 
     final addressService = Provider.of<AddressService>(context);
+    final configurationService = Provider.of<ConfigurationService>(context);
     final handler = useMemoized(
       () => WalletSetupHandler(store, addressService),
-      [addressService, store],
+      [addressService, configurationService, store],
     );
 
     return provide(context, handler);

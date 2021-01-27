@@ -7,13 +7,13 @@ import 'package:stcerwallet/style/styles.dart';
 
 enum _ImportType { Keystore, Mnemonic, PrivateKey }
 
-class WalletImportPage extends StatelessWidget {
-  static const String routeName = Routes.wallet + '/import';
+class WalletAccountImportPage extends StatelessWidget {
+  static const String routeName = Routes.wallet + 'account/import';
 
   static const List<_ImportType> _tabs = [
-    _ImportType.Keystore,
+    //_ImportType.Keystore,
     _ImportType.Mnemonic,
-    _ImportType.PrivateKey
+    //_ImportType.PrivateKey
   ];
 
   @override
@@ -35,7 +35,7 @@ class WalletImportPage extends StatelessWidget {
       iconTheme: theme.iconTheme,
       elevation: 0.0,
       backgroundColor: Colors.white,
-      title: new Text('Import ETHEREUM Wallet'),
+      title: new Text('Import Starcoin Wallet'),
       actions: <Widget>[
         new IconButton(
           icon: Image.asset('assets/images/ic_qrcode_scan.png',
@@ -59,9 +59,10 @@ class WalletImportPage extends StatelessWidget {
                     return new Tab(
                       text: getTabName(type),
                     );
-                  }).toList()
-              ),
-              Divider(height: Dimens.line,)
+                  }).toList()),
+              Divider(
+                height: Dimens.line,
+              )
             ],
           ),
           preferredSize: Size.fromHeight(50.0)),

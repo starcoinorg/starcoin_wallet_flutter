@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:stcerwallet/manager/wallet_initialzer.dart';
+import 'package:provider/provider.dart';
+import 'package:stcerwallet/model/identity.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
-import 'package:stcerwallet/pages/wallet/init/wallet_account_create_result_page.dart';
+import 'package:stcerwallet/pages/wallet/wallet_create_page.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/password_inputfield.dart';
 import 'package:stcerwallet/view/status_widget.dart';
@@ -40,8 +42,12 @@ class _WalletAccountCreateState extends State<WalletAccountCreatePage> {
 
   _CreateFormData _formData = _CreateFormData();
 
+  ConfigurationService configurationService;
+
   @override
   Widget build(BuildContext context) {
+    this.configurationService = Provider.of<ConfigurationService>(context);
+
     return new Scaffold(
       key: _scaffoldKey,
       appBar: _appBar(context),
@@ -182,7 +188,14 @@ class _WalletAccountCreateState extends State<WalletAccountCreatePage> {
     //todo 校验
     String password = _formData.password;
     String name = _formData.name;
-    print("before:${new DateTime.now()}\n");
+
+    configurationService.setIdentity(Identity(name, password));
+
+    Navigator.of(context).pushNamed(WalletCreatePage.routeName);
+
+    // Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+    //   return new WalletCreatePage("Create Wallet", password);
+    // }));
 
     // final wallet =
     //     await WalletInitializer.generateWallet(password: password, name: name);

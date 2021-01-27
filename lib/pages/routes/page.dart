@@ -7,6 +7,7 @@ import 'package:stcerwallet/pages/profile_page.dart';
 import 'package:stcerwallet/pages/transactions/transaction_detail.dart';
 import 'package:stcerwallet/pages/wallet/init/identity_init_page.dart';
 import 'package:stcerwallet/pages/wallet/init/wallet_account_create_page.dart';
+import 'package:stcerwallet/pages/wallet/init/wallet_account_import_page.dart';
 import 'package:stcerwallet/pages/wallet/qrcode_reader_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_import_page.dart';
 import 'package:stcerwallet/pages/wallet/wallet_manage_page.dart';
@@ -83,8 +84,28 @@ List<Page> _buildPages() {
             )),
     new Page(
         routeName: WalletAccountCreatePage.routeName,
-        buildRoute: (BuildContext context) => new WalletAccountCreatePage()),
+        buildRoute: (BuildContext context) =>
+            WalletSetupProvider(builder: (context, store) {
+              useEffect(() {
+                store.generateMnemonic();
+                return null;
+              }, []);
+
+              return new WalletAccountCreatePage();
+            })),
+    new Page(
+        routeName: WalletAccountImportPage.routeName,
+        buildRoute: (BuildContext context) =>
+            WalletSetupProvider(builder: (context, store) {
+              useEffect(() {
+                store.generateMnemonic();
+                return null;
+              }, []);
+
+              return new WalletAccountImportPage();
+            })),
   ];
+
   if (Platform.isIOS || Platform.isAndroid) {
     pages.add(new Page(
         routeName: QRCodeReaderPage.routeName,

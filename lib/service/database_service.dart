@@ -80,6 +80,10 @@ class DatabaseService {
     );
   }
 
+  Future<void> truncate(String tableName) async {
+    await _database.execute("TRUNCATE TABLE $tableName");
+  }
+
   Future<List<Map<String, dynamic>>> queryRaw(String sql,
       [List<dynamic> arguments]) async {
     return await _database.rawQuery(

@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stcerwallet/context/setup/wallet_setup_handler.dart';
+import 'package:stcerwallet/model/identity.dart';
+import 'package:stcerwallet/service/configuration_service.dart';
 import 'package:stcerwallet/style/styles.dart';
 import 'package:stcerwallet/view/edu_tips_widget.dart';
 import 'package:stcerwallet/view/password_inputfield.dart';
 
+class _ImportFormData {
+  String name = '';
+
+  String password = '';
+
+  String rePassword = '';
+
+  String mnemonic = '';
+
+  bool hasBeenEdited() {
+    return name != '' && password != '' && rePassword != '';
+  }
+
+  @override
+  String toString() {
+    return '_ImportFormData{name: $name, password: $password, rePassword: $rePassword}';
+  }
+}
+
 class MnemonicImportPage extends StatelessWidget {
+  _ImportFormData formData = new _ImportFormData();
+
+  final WalletSetupHandler store;
+
+  MnemonicImportPage(this.store);
+
   @override
   Widget build(BuildContext context) {
+    final configurationService = Provider.of<ConfigurationService>(context);
+
     return new SafeArea(
         child: new Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -24,7 +55,13 @@ class MnemonicImportPage extends StatelessWidget {
               top: Dimens.divider, left: Dimens.padding, right: Dimens.padding),
           width: double.infinity,
           child: new RaisedButton(
-            onPressed: () {
+            onPressed: () async {
+              String password = formData.password;
+              String name = formData.name;
+
+              await configurationService.setIdentity(Identity(name, password));
+
+              await store.importFromMnemonic(formData.mnemonic);
               Navigator.of(context).popUntil(ModalRoute.withName('/'));
             },
             child: new Text('Start Importing'),
@@ -57,7 +94,7 @@ class MnemonicImportPage extends StatelessWidget {
         child: new TextFormField(
           decoration: new InputDecoration(hintText: 'Identity Name'),
           onSaved: (value) {
-            //this._formData.name = value;
+            this.formData.name = value;
           },
         ),
       ),
@@ -79,6 +116,9 @@ class MnemonicImportPage extends StatelessWidget {
             hintText: 'Please separate each Mnemonic Phrase with a space',
             border: InputBorder.none),
         maxLines: 6,
+        onSaved: (value) {
+          this.formData.mnemonic = value;
+        },
       ),
     );
   }
@@ -91,7 +131,10 @@ class MnemonicImportPage extends StatelessWidget {
         data: theme.copyWith(primaryColor: theme.dividerColor),
         child: new PasswordField(
           labelText: 'Wallet Password',
-          onFieldSubmitted: (String value) {},
+          //onFieldSubmitted: (String value) {},
+          onSaved: (value) {
+            this.formData.password = value;
+          },
         ),
       ),
     );
@@ -106,6 +149,9 @@ class MnemonicImportPage extends StatelessWidget {
         child: new PasswordField(
           labelText: 'Repeat Password',
           onFieldSubmitted: (String value) {},
+          onSaved: (value) {
+            this.formData.rePassword = value;
+          },
         ),
       ),
     );

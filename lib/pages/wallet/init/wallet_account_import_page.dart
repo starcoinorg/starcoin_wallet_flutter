@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:stcerwallet/context/setup/wallet_setup_handler.dart';
+import 'package:stcerwallet/context/setup/wallet_setup_provider.dart';
 import 'package:stcerwallet/pages/routes/routes.dart';
 import 'package:stcerwallet/pages/wallet/unlock/keystore_import_page.dart';
 import 'package:stcerwallet/pages/wallet/unlock/mnemonic_import_page.dart';
@@ -7,7 +10,7 @@ import 'package:stcerwallet/style/styles.dart';
 
 enum _ImportType { Keystore, Mnemonic, PrivateKey }
 
-class WalletAccountImportPage extends StatelessWidget {
+class WalletAccountImportPage extends HookWidget {
   static const String routeName = Routes.wallet + 'account/import';
 
   static const List<_ImportType> _tabs = [
@@ -18,12 +21,14 @@ class WalletAccountImportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var store = useWalletSetup(context);
+
     return new DefaultTabController(
         length: _tabs.length,
         child: new Scaffold(
           backgroundColor: Colors.white,
           appBar: _appBar(context),
-          body: new TabBarView(children: _bodyImportWidgets(context)),
+          body: new TabBarView(children: _bodyImportWidgets(context, store)),
         ));
   }
 
@@ -85,7 +90,7 @@ class WalletAccountImportPage extends StatelessWidget {
     return tabName;
   }
 
-  _bodyImportWidgets(BuildContext context) {
+  _bodyImportWidgets(BuildContext context, WalletSetupHandler store) {
     return _tabs.map((type) {
       Widget page;
       switch (type) {
@@ -93,7 +98,7 @@ class WalletAccountImportPage extends StatelessWidget {
           page = KeystoreImportPage();
           break;
         case _ImportType.Mnemonic:
-          page = MnemonicImportPage();
+          page = MnemonicImportPage(store);
           break;
         case _ImportType.PrivateKey:
           page = PrivateKeyImportPage();

@@ -22,7 +22,7 @@ class MainFlutterWindow: NSWindow {
         result(FlutterMethodNotImplemented)
         return
       }
-    })    
+    })
 
     RegisterGeneratedPlugins(registry: flutterViewController)
 

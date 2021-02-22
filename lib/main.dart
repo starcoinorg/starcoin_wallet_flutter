@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stcerwallet/config/states.dart';
 import 'package:stcerwallet/service/configuration_service.dart';
@@ -26,7 +27,8 @@ void main() async {
 
   final configurationService = ConfigurationService(sharedPrefs);
 
-  final providers = await createProviders(AppConfig().params["ropsten"],configurationService);
+  final providers = await createProviders(
+      AppConfig().params["ropsten"], configurationService);
 
   Store<AppState> store = new Store(appReducer,
       initialState: new AppState(theme: kLightTheme, loadingVisible: false));
@@ -35,7 +37,7 @@ void main() async {
 
 class App extends StatelessWidget {
   final Store<AppState> store;
-  final List<SingleChildCloneableWidget> providers;
+  final List<SingleChildWidget> providers;
 
   App({this.store, this.providers});
 

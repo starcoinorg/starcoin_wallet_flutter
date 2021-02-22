@@ -1,3 +1,4 @@
+import 'package:provider/single_child_widget.dart';
 import 'package:starcoin_wallet/wallet/json_rpc.dart';
 import 'package:starcoin_wallet/wallet/pubsub.dart';
 import 'package:stcerwallet/app_config.dart';
@@ -24,8 +25,8 @@ class Services {
       this.watchEventService, this.deepLinkBloc);
 }
 
-Future<List<SingleChildCloneableWidget>> createProviders(
-    AppConfigParams params,ConfigurationService configurationService) async {
+Future<List<SingleChildWidget>> createProviders(
+    AppConfigParams params, ConfigurationService configurationService) async {
   final client = Web3Client(params.web3HttpUrl, Client(), socketConnector: () {
     return IOWebSocketChannel.connect(params.web3RdpUrl).cast<String>();
   });
@@ -36,7 +37,7 @@ Future<List<SingleChildCloneableWidget>> createProviders(
 
   final contractService = ContractService(client, contract);
 
-  final starcoinUrl=NetworkManager.getCurrentNetworkUrl();
+  final starcoinUrl = NetworkManager.getCurrentNetworkUrl();
   final socket = IOWebSocketChannel.connect(Uri.parse(starcoinUrl.wsUrl));
   final rpc = JsonRPC(starcoinUrl.httpUrl, Client());
   final pubSubClient = PubSubClient(socket.cast<String>(), rpc);

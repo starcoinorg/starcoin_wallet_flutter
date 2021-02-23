@@ -15,13 +15,14 @@ class ScWallet extends Entity {
   int _isDefault;
   int _currentAccount;
   String _seed;
+  String _mnemonic;
 
   ScWallet(this.accounts, this._addressCount, this._isDefault,
-      this._currentAccount, this._seed) {
+      this._currentAccount, this._seed, this._mnemonic) {
     this.wallet = Wallet(mnemonic: this._seed);
   }
 
-  ScWallet.initAccount(this._isDefault, this._seed) {
+  ScWallet.initAccount(this._isDefault, this._seed, this._mnemonic) {
     this.wallet = Wallet(mnemonic: this._seed, salt: 'STARCOIN');
     Account account = this.wallet.newAccount();
     this._addressCount = 1;
@@ -56,7 +57,7 @@ class ScWallet extends Entity {
 
   @override
   String createTable() {
-    return "CREATE TABLE IF NOT EXISTS seeds(seed VARCHAR(128) PRIMARY KEY,private_keys JSON, address_count INT,is_default BOOLEAN,current_account INT)";
+    return "CREATE TABLE IF NOT EXISTS seeds(seed VARCHAR(128) PRIMARY KEY,mnemonic VARCHAR(256),private_keys JSON, address_count INT,is_default BOOLEAN,current_account INT)";
   }
 
   @override
@@ -75,12 +76,13 @@ class ScWallet extends Entity {
       "address_count": _addressCount,
       "is_default": _isDefault,
       "current_account": _currentAccount,
+      "mnemonic": _mnemonic,
     };
   }
 
   @override
   String toString() {
-    return 'ScWallet{_accounts: $accounts, _addressCount: $_addressCount, _isDefault: $_isDefault, _currentAccount: $_currentAccount, _seed: $_seed}';
+    return 'ScWallet{_accounts: $accounts, _addressCount: $_addressCount, _isDefault: $_isDefault, _currentAccount: $_currentAccount, _seed: $_seed,_mnemonic:$_mnemonic}';
   }
 
   @override
@@ -107,6 +109,7 @@ class ScWallet extends Entity {
 
 ScWallet mapToScWallet(Map<String, dynamic> record) {
   final seed = record['seed'];
+  final mnemonic = record['mnemonic'];
   final addressCount = record['address_count'];
   final isDefault = record['is_default'];
   final currentAccount = record['current_account'];
@@ -116,5 +119,6 @@ ScWallet mapToScWallet(Map<String, dynamic> record) {
       .map((privateKeyHex) => Account(KeyPair.fromHex(privateKeyHex)))
       .toList();
 
-  return ScWallet(accounts, addressCount, isDefault, currentAccount, seed);
+  return ScWallet(
+      accounts, addressCount, isDefault, currentAccount, seed, mnemonic);
 }

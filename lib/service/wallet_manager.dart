@@ -23,11 +23,11 @@ class WalletManager {
     return result;
   }
 
-  Future<void> initWallet(String seed) async {
+  Future<void> initWallet(String cryptMnemonic, String mnemonic) async {
     final databaseService = await DatabaseService.getInstance();
 
-    final result = await databaseService
-        .insert(ScWallet.initAccount(ScWallet.DEFAULT, seed));
+    final result = await databaseService.insert(
+        ScWallet.initAccount(ScWallet.DEFAULT, cryptMnemonic, mnemonic));
     return result;
   }
 

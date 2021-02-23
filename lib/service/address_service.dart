@@ -50,7 +50,7 @@ class AddressService implements IAddressService {
     Wallet wallet = new Wallet(mnemonic: cryptMnemonic, salt: 'STARCOIN');
     Account account = wallet.generateAccount(0);
 
-    WalletManager.instance.initWallet(cryptMnemonic);
+    WalletManager.instance.initWallet(cryptMnemonic, mnemonic);
 
     await _configService.setMnemonic(mnemonic);
     await _configService.setEntropyMnemonic(cryptMnemonic);

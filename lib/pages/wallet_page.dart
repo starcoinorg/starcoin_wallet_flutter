@@ -204,8 +204,7 @@ class WalletPage extends HookWidget {
     Widget currentWalletWidget = new WalletWidget(
       wallet: wallet,
       onMoreTap: () async {
-        wallet.mnemonic = configurationService.getMnemonic();
-        wallet.privateKey = configurationService.getPrivateKey();
+        //wallet.privateKey = configurationService.getPrivateKey();
         final scwallets = await WalletManager.instance.wallets;
         final scwallet = scwallets[0];
         Navigator.of(context).push(new MaterialPageRoute(builder: (_) {

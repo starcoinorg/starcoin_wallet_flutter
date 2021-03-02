@@ -84,7 +84,7 @@ class SpecificWalletManagePage extends StatelessWidget {
         onTapCallback: () {
           Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
             return new ExportPage(
-              content: wallet.getMnemonic(),
+              content: wallet.getSeed(),
               title: "Export Mnemonic",
             );
           }));
